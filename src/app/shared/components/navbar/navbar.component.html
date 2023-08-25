@@ -1,0 +1,15 @@
+<mat-toolbar class="justify-content-between">
+  <div fxHide.gt-xs>
+      <button mat-icon-button (click)="onToggleSidenav()">
+          <mat-icon>menu</mat-icon>
+      </button>
+  </div>
+
+  <div>
+              <a routerLink="/leaves" class="me-1 ms-1" *ngIf="authService.isAuthenticated()">Leaves</a>
+              <a routerLink="/users" class="me-1 ms-1" *ngIf="authService.isAdmin()">Users</a>
+              <a routerLink="/holidays" class="me-1 ms-1" *ngIf="authService.isAdmin()">Holidays</a>
+              <a routerLink="/auth" class="me-1 ms-1" *ngIf="!authService.isAuthenticated()">Login</a>
+
+  </div>
+</mat-toolbar>

@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "leavemanagementlinkzy": {
+      "hosting": {
+        "LMS": [
+          "leavemanagementlinkzy"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "leavemanagementlinkzy"
+  }
+}

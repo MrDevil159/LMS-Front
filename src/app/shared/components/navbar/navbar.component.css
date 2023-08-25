@@ -1,0 +1,24 @@
+a {
+  text-decoration: none;
+  color: rgb(89, 89, 89);
+}
+
+a:hover, a:active{
+  color: rgb(67, 67, 67);
+}
+
+.navigation-items{
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+mat-toolbar{
+  border-radius: 3px;
+}
+
+@media(max-width: 959px){
+  mat-toolbar{
+      border-radius: 0px;
+  }
+}
