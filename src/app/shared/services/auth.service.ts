@@ -2,7 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
-import { Auth, getAuth, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail } from '@angular/fire/auth';
+import {
+  Auth,
+  getAuth,
+  signInWithEmailAndPassword,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+} from '@angular/fire/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
@@ -18,8 +24,10 @@ export class AuthService {
 
   private firebaseApiUrl =
     'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAEm2MUVk8T3sfzqvSrTFAjr9LCAeQ4hFs';
-
-  constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
+  authfb!: Auth;
+  constructor(private http: HttpClient, private snackBar: MatSnackBar) {
+    this.authfb = getAuth();
+  }
 
   private authenticate: Auth = inject(Auth);
 
@@ -30,7 +38,6 @@ export class AuthService {
     });
   }
 
-
   get userAuth$(): Observable<any> {
     return this.userAuthSubject.asObservable();
   }
@@ -40,26 +47,22 @@ export class AuthService {
 
   signIn(email: string, password: string): Observable<any> {
     const authfb = getAuth();
-    signInWithEmailAndPassword(authfb, email, password).then(
-      (userLoginResponse)=> {
+    signInWithEmailAndPassword(authfb, email, password)
+      .then((userLoginResponse) => {
         console.log('comes from auth fb');
         console.log(userLoginResponse);
-        if(userLoginResponse.user.emailVerified === false) {
-          sendEmailVerification(authfb.currentUser!).then(
-            ()=> {
-              console.log('email sent');
-              
-            }
-          );
+        if (userLoginResponse.user.emailVerified === false) {
+          sendEmailVerification(authfb.currentUser!).then(() => {
+            console.log('email sent');
+          });
         }
-      }
-    ).catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode);
-      console.log(errorMessage);      
-    });
-
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode);
+        console.log(errorMessage);
+      });
 
     const body = {
       email,
@@ -103,7 +106,7 @@ export class AuthService {
             this.userDataSubject.next(response[firstUserId]);
           }
         }
-        console.log("User Data");
+        console.log('User Data');
         console.log(this.userDataSubject.value);
       }),
       catchError((error) => {
@@ -115,7 +118,7 @@ export class AuthService {
     );
   }
 
-  insertUserData(userData:any): Observable<any> {
+  insertUserData(userData: any): Observable<any> {
     const databaseUrl =
       'https://leavemanagementlinkzy-default-rtdb.asia-southeast1.firebasedatabase.app/users.json';
     return this.http.post(databaseUrl, userData).pipe(
@@ -146,27 +149,34 @@ export class AuthService {
     sendPasswordResetEmail(auth, email)
       .then(() => {
         console.log('reset email sent');
-        
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode);
-        console.log(errorMessage);  
-        this.showErrorSnackbar('Please enter email field')
+        console.log(errorMessage);
+        this.showErrorSnackbar('Please enter email field');
       });
   }
-  async isLoggedIn() {
-    const authfb = getAuth();
-    const user = authfb.currentUser;
-    if(user) {
-      this.userAuthSubject.next(authfb.currentUser);
-      console.log(this.userAuthSubject.value);
-      const userValue = await this.fetchUserDataByEmail(authfb.currentUser.email)
-      this.userDataSubject.next(userValue);
-      console.log(this.userDataSubject.value);
+  isLoggedIn() {
+    console.log('checking');
+    this.authfb.onAuthStateChanged((res) => {
+      console.log(res);
 
-    }
-    return !!user;
+      const user = this.authfb.currentUser;
+      if (user) {
+        this.userAuthSubject.next(this.authfb.currentUser);
+        console.log(this.userAuthSubject.value);
+        this.fetchUserDataByEmail(user.email).subscribe();
+        console.log(this.userDataSubject.value);
+      }
+    });
+    // return !!user;
+  }
+
+  logout() {
+    this.authfb.signOut();
+    this.userAuthSubject.next(null);
+    this.userDataSubject.next(null);
   }
 }
