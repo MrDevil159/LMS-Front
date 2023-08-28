@@ -1,0 +1,48 @@
+<div class="d-flex w-80 justify-content-end mt-2">
+  <button mat-raised-button color="primary" (click)="addHoliday()">
+    Add Holiday
+  </button>
+</div>
+<div class="calendar d-flex justify-content-center m-auto flex-column mt-2 mb-2">
+
+  <div class="month-switcher">
+    <button (click)="previousMonth()" mat-raised-button color="primary">Previous</button>
+
+    {{ currentMonth | date: 'MMMM yyyy' }}
+    <button (click)="nextMonth()" mat-raised-button color="primary">Next</button>
+
+  </div>
+  <div class="days-header">
+    <div *ngFor="let weekday of weekdays" class="weekday">{{ weekday }}</div>
+  </div>
+  
+  <div class="days" >
+    <div *ngFor="let emptyDay of emptyDaysBefore" class="empty-day"></div>
+  
+    <div *ngFor="let day of daysInMonth" [ngClass]="{ today: isToday(day) }" class="day" (click)="showTooltip($event, day)">
+      {{ day }}
+
+      <div *ngFor="let event of eventsForDay(day)" class="event" [matTooltip]="event.name"
+      matTooltipPosition="above">{{ event.name }}</div>
+    </div>
+  </div>
+  
+  
+  
+  
+  
+  
+  
+  <app-custom-tooltip *ngIf="tooltipVisible" [tooltipText]="tooltipText" class="mt-1"></app-custom-tooltip>
+  
+
+  
+
+
+
+
+
+
+
+
+

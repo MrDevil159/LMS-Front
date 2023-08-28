@@ -1,0 +1,138 @@
+.calendar {
+  display: inline-block;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f7f7f7;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  overflow: scroll;
+  -webkit-scrollbar: hidden;
+}
+
+.w-80 {
+  width: 80%;
+  margin: auto;
+}
+
+.calendar::-webkit-scrollbar {
+  display: none;
+}
+.month-switcher {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+}
+.days-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.weekday {
+  text-align: center;
+  background-color: #ddd;
+  padding: 5px;
+}
+
+.day {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.day:hover {
+  background-color: #f2f2f2;
+}
+
+.current {
+  background-color: #3498db;
+  color: white;
+  border-radius: 50%;
+}
+
+.hastask {
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 50%;
+}
+
+.lastmonth,
+.nextmonth {
+  color: #ccc;
+}
+
+.event {
+  background-color: #f39c12;
+  color: white;
+  padding: 2px;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.today {
+  background-color: #3f3f3f;
+  color: white;
+  font-weight: bold;
+}
+.empty-day {
+  border: 1px solid transparent; /* Hide border for empty day */
+  padding: 10px;
+  text-align: center;
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+@media (max-width: 600px) {
+  .calendar {
+    width: 100%;
+    overflow: auto;
+  }
+
+  .days {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 2px;
+  }
+
+  .day {
+    padding: 5px;
+    font-size: 14px;
+  }
+
+  .month-switcher {
+    font-size: 16px;
+  }
+
+  .event {
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80%;
+  }
+
+  .weekday {
+    font-size: 14px;
+  }
+}

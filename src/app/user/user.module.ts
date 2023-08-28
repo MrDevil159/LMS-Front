@@ -37,13 +37,14 @@ import { MatMenuModule } from '@angular/material/menu';
     HttpClientModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
-    MatInputModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule,
+
 MatTableModule, 
 MatPaginatorModule,
 MatSortModule,
+MatSelectModule,
+MatButtonModule,
+MatInputModule,
+MatFormFieldModule,
 MatIconModule,
 MatMenuModule
 

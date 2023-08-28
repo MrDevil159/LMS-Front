@@ -35,7 +35,7 @@ import { HolidayOutletComponent } from './holidays/holiday-outlet/holiday-outlet
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => {
       const auth = getAuth();
-      auth.setPersistence(browserLocalPersistence); // Set persistence to local
+      auth.setPersistence(browserLocalPersistence);
       return auth;
     }),
     provideDatabase(() => getDatabase()),

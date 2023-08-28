@@ -92,7 +92,7 @@ export class AuthService {
     }
   }
 
-  fetchUserDataByEmail(email: string): Observable<string | null> {
+  fetchUserDataByEmail(email: string | null): Observable<string | null> {
     const databaseUrl = `https://leavemanagementlinkzy-default-rtdb.asia-southeast1.firebasedatabase.app/users.json?orderBy="email"&equalTo="${email}"`;
     return this.http.get<any>(databaseUrl).pipe(
       tap((response) => {
@@ -155,5 +155,18 @@ export class AuthService {
         console.log(errorMessage);  
         this.showErrorSnackbar('Please enter email field')
       });
+  }
+  async isLoggedIn() {
+    const authfb = getAuth();
+    const user = authfb.currentUser;
+    if(user) {
+      this.userAuthSubject.next(authfb.currentUser);
+      console.log(this.userAuthSubject.value);
+      const userValue = await this.fetchUserDataByEmail(authfb.currentUser.email)
+      this.userDataSubject.next(userValue);
+      console.log(this.userDataSubject.value);
+
+    }
+    return !!user;
   }
 }
