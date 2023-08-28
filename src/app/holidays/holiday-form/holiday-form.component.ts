@@ -51,7 +51,4 @@ export class HolidayFormComponent {
     this.adminService.readHolidayData(this.holidayForm.value.name)
   }
 
-  checkLogin() {
-    console.log(    this.authService.isLoggedIn()    );
-  }
 }

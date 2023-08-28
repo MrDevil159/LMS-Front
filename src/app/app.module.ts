@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule,APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
@@ -19,6 +19,7 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { NavContentComponent } from './shared/components/navbar/nav-content/nav-content.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HolidayOutletComponent } from './holidays/holiday-outlet/holiday-outlet.component';
+// import { AppInitializerService } from './shared/services/app-initializer.service';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,15 @@ import { HolidayOutletComponent } from './holidays/holiday-outlet/holiday-outlet
     MatSidenavModule,
     MatSnackBarModule
   ],
-  providers: [],
+  providers: [
+    // AppInitializerService,
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: (appInitializer: AppInitializerService) => () => appInitializer.initializeApp(),
+    //   multi: true,
+    //   deps: [AppInitializerService]
+    // }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

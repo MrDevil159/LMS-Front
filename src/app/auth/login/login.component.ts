@@ -10,6 +10,8 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 export class LoginComponent {
   constructor(public authService: AuthService, private router: Router) {}
   error:null|string = null;
+  hide = true;
+
   onSignIn(email: string, password: string) {
     this.authService.signIn(email, password).subscribe({
       next: (data: any) => {

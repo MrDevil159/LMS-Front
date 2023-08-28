@@ -1,3 +1,14 @@
+.contain {
+  background: whitesmoke;
+  padding: 20px;
+  border-radius: 8px;
+  filter: drop-shadow(0 0.2rem 0.25rem rgba(0, 0, 0, 0.2));
+}
+
+.width-90 {
+  width: 90%;
+}
+
 .mat-elevation-z8 {    
   overflow-x: auto;
  }
