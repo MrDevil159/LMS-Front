@@ -172,7 +172,6 @@ export class AuthService {
     console.log('checking');
     this.authfb.onAuthStateChanged((res) => {
       console.log(res);
-
       const user = this.authfb.currentUser;
       if (user) {
         const userDataPromise = this.fetchUserDataByEmail(user.email);
