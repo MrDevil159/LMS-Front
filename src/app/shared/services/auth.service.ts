@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, tap, map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, from, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import {
   Auth,
   getAuth,
@@ -9,12 +9,16 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
 } from '@angular/fire/auth';
+import { getDatabase, ref, onValue } from "firebase/database";
+
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Database, set } from '@angular/fire/database';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+
   private userAuthSubject: BehaviorSubject<any> = new BehaviorSubject<any>(
     null
   );
@@ -25,7 +29,7 @@ export class AuthService {
   private firebaseApiUrl =
     'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAEm2MUVk8T3sfzqvSrTFAjr9LCAeQ4hFs';
   authfb!: Auth;
-  constructor(private http: HttpClient, private snackBar: MatSnackBar) {
+  constructor(private http: HttpClient, private snackBar: MatSnackBar, private database:Database) {
     this.authfb = getAuth();
   }
 
@@ -45,12 +49,13 @@ export class AuthService {
     return this.userDataSubject.asObservable();
   }
 
-  signIn(email: string, password: string): Observable<any> {
+  signIn(email: string, password: string): Promise<any> {
     const authfb = getAuth();
     signInWithEmailAndPassword(authfb, email, password)
       .then((userLoginResponse) => {
         console.log('comes from auth fb');
         console.log(userLoginResponse);
+        this.userAuthSubject.next(userLoginResponse);
         if (userLoginResponse.user.emailVerified === false) {
           sendEmailVerification(authfb.currentUser!).then(() => {
             console.log('email sent');
@@ -69,14 +74,7 @@ export class AuthService {
       password,
       returnSecureToken: true,
     };
-    return this.http.post(this.firebaseApiUrl, body).pipe(
-      tap((response) => {
-        this.userAuthSubject.next(response);
-      }),
-      catchError((error) => {
-        return throwError(() => this.mapFirebaseErrorToMessage(error)); // Handle error here
-      })
-    );
+    return this.http.post(this.firebaseApiUrl, body).toPromise();
   }
 
   private mapFirebaseErrorToMessage(error: any): string {
@@ -95,33 +93,35 @@ export class AuthService {
     }
   }
 
-  fetchUserDataByEmail(email: string | null): Observable<string | null> {
-    const databaseUrl = `https://leavemanagementlinkzy-default-rtdb.asia-southeast1.firebasedatabase.app/users.json?orderBy="email"&equalTo="${email}"`;
-    return this.http.get<any>(databaseUrl).pipe(
-      tap((response) => {
-        if (response) {
-          const userIds = Object.keys(response);
-          if (userIds.length > 0) {
-            const firstUserId = userIds[0];
-            this.userDataSubject.next(response[firstUserId]);
-          }
+  fetchUserDataByEmail(email: string | null): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (!email) {
+        reject('Email is null');
+        return;
+      }
+  
+      const db = getDatabase();
+      const queryRef = ref(db, 'users/');
+      
+      onValue(queryRef, (snapshot) => {
+        const data = snapshot.toJSON();
+
+        const filteredObject = Object.values(data!).find(item => item.email === email);
+
+        if (filteredObject) {
+          this.userDataSubject.next(filteredObject);
+          resolve(filteredObject);
+        } else {
+          reject('Invalid');
         }
-        console.log('User Data');
-        console.log(this.userDataSubject.value);
-      }),
-      catchError((error) => {
-        console.error('Error fetching user role:', error);
-        return throwError(() =>
-          console.log('Error fetching user role.', error)
-        );
-      })
-    );
+      });
+    });
   }
+  
+
 
   insertUserData(userData: any): Observable<any> {
-    const databaseUrl =
-      'https://leavemanagementlinkzy-default-rtdb.asia-southeast1.firebasedatabase.app/users.json';
-    return this.http.post(databaseUrl, userData).pipe(
+    return from(this.enterUserData(userData)).pipe(
       tap((response) => {
         console.log('User data inserted:', response);
       }),
@@ -134,13 +134,23 @@ export class AuthService {
     );
   }
 
+  async enterUserData(userData: any) {
+    const db = getDatabase();
+    try {
+      await set(ref(db, 'users/' + userData.email), userData);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
   isAuthenticated(): boolean {
     const userToken = this.userAuthSubject.value?.idToken;
     return !!userToken;
   }
 
   isAdmin(): boolean {
-    const userRole = this.userDataSubject.value?.role;
+    const userRole = this.userDataSubject.value?.role;    
     return userRole === 'ADMIN';
   }
 
@@ -155,7 +165,7 @@ export class AuthService {
         const errorMessage = error.message;
         console.log(errorCode);
         console.log(errorMessage);
-        this.showErrorSnackbar('Please enter email field');
+        this.showErrorSnackbar(errorMessage);
       });
   }
   isLoggedIn() {
@@ -165,10 +175,12 @@ export class AuthService {
 
       const user = this.authfb.currentUser;
       if (user) {
-        this.userAuthSubject.next(this.authfb.currentUser);
-        console.log(this.userAuthSubject.value);
-        this.fetchUserDataByEmail(user.email).subscribe();
-        console.log(this.userDataSubject.value);
+        const userDataPromise = this.fetchUserDataByEmail(user.email);
+        userDataPromise.then((data) => {
+          this.userAuthSubject.next(this.authfb.currentUser);
+          console.log(this.userAuthSubject.value);
+          console.log(data);
+        });
       }
     });
     // return !!user;

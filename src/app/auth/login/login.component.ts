@@ -13,34 +13,23 @@ export class LoginComponent {
   hide = true;
 
   onSignIn(email: string, password: string) {
-    this.authService.signIn(email, password).subscribe({
-      next: (data: any) => {
-        console.log('Signning In....');
-        this.authService.fetchUserDataByEmail(email).subscribe({
-          next: (data: any) => {
-            console.log('Fetching Auth Data...');
-            if (this.authService.isAdmin()) {
-              this.router.navigate(['/users']);
-            } else {
-              this.router.navigate(['/leaves']);
-            }
-          },
-          error: (error: any) => {
-            this.authService.showErrorSnackbar(error);
-            console.log(error);
-            this.error = error;
-          },
-        });
-      },
-      error: (error) => {
-        console.log(error);
-        this.error = error;
-        this.authService.showErrorSnackbar(error);
+    const promise = this.authService.signIn(email, password);
+    promise.then((data: any) => {
+      console.log('Signning In....');
+      const userDataPromise = this.authService.fetchUserDataByEmail(email);
+      userDataPromise.then((data: any) => {
+        console.log('Fetching Auth Data...');
+        if (this.authService.isAdmin()) {
+          this.router.navigate(['/users']);
+        } else {
+          this.router.navigate(['/leaves']);
+        }
+      });
+    }).catch((error: any) => {
+      console.log(error);
+      this.error = error;
+      this.authService.showErrorSnackbar(error);
 
-      },
-      complete: () => {
-        console.log('login process finished');
-      },
     });
   }
   onForgotPassword(email:string) {

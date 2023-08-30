@@ -23,7 +23,7 @@
       {{ day }}
 
       <div *ngFor="let event of eventsForDay(day)" class="event" [matTooltip]="event.name"
-      matTooltipPosition="above">{{ event.name }}</div>
+      matTooltipPosition="above" (click)="eventEdit(event)">{{ event.name }}  <span class="del bg-danger" (click)="deleteHoliday(event)">×</span></div>
     </div>
   </div>
   

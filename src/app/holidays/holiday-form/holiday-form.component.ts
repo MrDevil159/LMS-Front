@@ -10,13 +10,29 @@ import { AuthService } from 'src/app/shared/services/auth.service';
   styleUrls: ['./holiday-form.component.css']
 })
 export class HolidayFormComponent {
+  edit = false;
+  oldName!:string;
   holidayForm: FormGroup;
   constructor(private adminService: AdminService, private fb:FormBuilder, private authService:AuthService, private router: Router) {
-    this.holidayForm = this.fb.group({
-      name: ['', Validators.required],
-      date: ['', Validators.required],
-      typeOfHoliday: ['', Validators.required],
-    });
+    const editMode = this.router.getCurrentNavigation()!.extras.state;
+    if (editMode) {
+      const parsedDate = new Date(editMode['date']);
+      this.edit = true;
+      this.oldName = editMode['name'];
+      this.holidayForm = this.fb.group({
+        name: [editMode['name'], Validators.required],
+        date: [parsedDate, Validators.required],
+        typeOfHoliday: [editMode['typeOfHoliday'], Validators.required],
+      });
+      // this.holidayForm.get('date').setValue(parsedDate);
+    } else {
+      this.holidayForm = this.fb.group({
+        name: ['', Validators.required],
+        date: ['', Validators.required],
+        typeOfHoliday: ['', Validators.required],
+      });
+    }
+
   }
 
   formatDateToYYYYMD(dateString: any) {
@@ -47,8 +63,21 @@ export class HolidayFormComponent {
     }
   }
 
-  viewData() {
-    this.adminService.readHolidayData(this.holidayForm.value.name)
+  editInDatabase(nameOld: string) {
+    try {
+      this.adminService.editHolidayData(nameOld, this.holidayForm.value.name, this.formatDateToYYYYMD(this.holidayForm.value.date), this.holidayForm.value.typeOfHoliday);
+      this.authService.showErrorSnackbar(
+        'Editing Holiday Holiday successfully'
+      );
+      this.holidayForm.reset();
+      this.router.navigate(['/holidays']);
+
+    } catch(error) {
+      this.authService.showErrorSnackbar(
+        'Error Editing Holiday'
+      );
+      console.log(error);
+    }
   }
 
 }

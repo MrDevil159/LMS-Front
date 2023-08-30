@@ -19,7 +19,6 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { NavContentComponent } from './shared/components/navbar/nav-content/nav-content.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HolidayOutletComponent } from './holidays/holiday-outlet/holiday-outlet.component';
-// import { AppInitializerService } from './shared/services/app-initializer.service';
 
 @NgModule({
   declarations: [
@@ -49,13 +48,6 @@ import { HolidayOutletComponent } from './holidays/holiday-outlet/holiday-outlet
     MatSnackBarModule
   ],
   providers: [
-    // AppInitializerService,
-    // {
-    //   provide: APP_INITIALIZER,
-    //   useFactory: (appInitializer: AppInitializerService) => () => appInitializer.initializeApp(),
-    //   multi: true,
-    //   deps: [AppInitializerService]
-    // }
   ],
   bootstrap: [AppComponent]
 })

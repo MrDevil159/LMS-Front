@@ -1,8 +1,7 @@
-<button (click)="viewData()">Check Auth</button>
 <div class="d-flex flex-xl-row flex-column m-5">
     <div class="display-6">Holidays</div>
   
-    <form [formGroup]="holidayForm" class="container" (ngSubmit)="enterToDatabase()">
+    <form [formGroup]="holidayForm" class="container" (ngSubmit)="edit? editInDatabase(oldName) : enterToDatabase()">
       <mat-form-field class="w-100" appearance="fill">
         <mat-label for="name">Name</mat-label>
         <input type="text" id="name" matInput formControlName="name">
@@ -26,7 +25,7 @@
         </mat-select>
       </mat-form-field>
     <br>
-      <button mat-raised-button color="primary" type="submit" [disabled]="this.holidayForm.invalid">Submit</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="this.holidayForm.invalid">{{edit ? 'Edit':'Submit'}}</button>
     </form>
   </div>
     

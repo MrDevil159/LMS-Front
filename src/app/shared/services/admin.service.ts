@@ -1,16 +1,18 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
-import { BehaviorSubject, Observable, Subject, catchError, tap, throwError } from 'rxjs';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { Observable, Subject, catchError, tap, throwError } from 'rxjs';
 import { Auth } from '@angular/fire/auth';
-import { getDatabase ,Database, set, ref, update, onValue  } from '@angular/fire/database';
+import { getDatabase ,Database, set, ref, update, onValue, remove  } from '@angular/fire/database';
 import { Event } from 'src/app/shared/model/Event.model';
 
 
 @Injectable({
   providedIn: 'root'
 })
+
+
+
 export class AdminService {
 
   constructor(private http: HttpClient, private authService: AuthService, private authen:Auth, private database:Database) { }
@@ -65,6 +67,24 @@ export class AdminService {
     return this.http.get('https://leavemanagementlinkzy-default-rtdb.asia-southeast1.firebasedatabase.app/users.json');
   }
 
+  
+  getAllHoliday(): Observable<Event[]> {
+    const db = getDatabase();
+    const starCountRef = ref(db, 'holidays');
+  
+    return new Observable<Event[]>(subscriber => {
+      const unsubscribe = onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        const transformedData = Object.values(data).map((item) => ({
+          name: (item as Event).name,
+          date: (item as Event).date,
+          typeOfHoliday: (item as Event).typeOfHoliday
+        }));
+        subscriber.next(transformedData);
+      });
+    });
+  }
+  
 
   enterHolidayData(name: string, date: string, typeOfHoliday:string) {
     const db = getDatabase();
@@ -75,12 +95,27 @@ export class AdminService {
     });
   }
 
-  readHolidayData(name:string) {
+  editHolidayData(nameOld:string, name: string, date: string, typeOfHoliday:string) {
     const db = getDatabase();
-    const starCountRef = ref(db, 'holidays/' + name);
-    onValue(starCountRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log(data);
+    remove(ref(db, 'holidays/' + nameOld))
+    .then(() => {
+      this.enterHolidayData(name, date, typeOfHoliday);
+    })
+    .catch((error) => {
+      console.log(error);
+      
     });
+  }
+
+  deleteHolidayEvent(event: Event) {
+    const db = getDatabase();
+    remove(ref(db, 'holidays/' + event.name)).then(
+      ()=> {
+        this.authService.showErrorSnackbar('Removed Successfully')
+      }
+    ).catch((err) => {
+      console.log(err);
+      this.authService.showErrorSnackbar('Removal Failed')
+    })
   }
 }

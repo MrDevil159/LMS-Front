@@ -1,5 +1,6 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Event } from 'src/app/shared/model/Event.model';
 import { AdminService } from 'src/app/shared/services/admin.service';
 
@@ -9,33 +10,45 @@ import { AdminService } from 'src/app/shared/services/admin.service';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
-export class CalendarComponent implements OnInit {
-  constructor(private el: ElementRef, private adminService: AdminService, private router: Router, private route:ActivatedRoute) {}
+export class CalendarComponent implements OnInit, OnDestroy {
+  constructor(private el: ElementRef, private adminService: AdminService, private router: Router, private route:ActivatedRoute) {
+    
+  }
+  ngOnDestroy(): void {
+    this.getValueHoliday.unsubscribe();
+  }
+  holidays: Event[] = [
+    
+  ];
+  getValueHoliday!:Subscription;
+  ngOnInit() {
+      this.getValueHoliday = this.adminService.getAllHoliday().subscribe(
+      {
+        next: (data) => {
+          // data.forEach(item => {
+          //   this.holidays.push(item);
+          // });
+          this.holidays = data;
+        },
+        error: (err) => console.log(err),
+        complete: ()=> console.log('holiday complete')
+      }
+    )
+    this.updateDisplayedHolidays();
+    this.generateCalendar();
+  }
+
+
+  
 
   daysInMonth: number[] = [];
-  holidays: Event[] = [
-    { name: 'Republic Day', date: '2023-1-26', typeOfHoliday: 'National Holiday' },
-    { name: 'Good Friday', date: '2023-4-14', typeOfHoliday: 'Religious Holiday' },
-    { name: 'Maha Shivratri', date: '2023-3-1', typeOfHoliday: 'Religious Holiday' },
-    { name: 'Holi', date: '2023-3-18', typeOfHoliday: 'Religious Holiday' },
-    { name: 'Rama Navami', date: '2023-4-9', typeOfHoliday: 'Religious Holiday' },
-    { name: 'Good Friday', date: '2023-4-14', typeOfHoliday: 'Religious Holiday' },
-    { name: 'Id-ul-Fitr', date: '2023-5-2', typeOfHoliday: 'Religious Holiday' },
-    { name: 'Independence Day', date: '2023-8-15', typeOfHoliday: 'National Holiday' },
-    { name: 'Gandhi Jayanti', date: '2023-10-2', typeOfHoliday: 'National Holiday' },
-    { name: 'Diwali', date: '2023-10-24', typeOfHoliday: 'Religious Holiday' },    
-    { name: 'Christmas', date: '2023-12-25', typeOfHoliday: 'Religious Holiday' },
-  ];
+
   currentMonth = new Date();
   displayedHolidays: Event[] = [];
 
   startingDay!: number; 
   emptyDaysBefore: number[] = []; 
 
-  ngOnInit() {
-    this.updateDisplayedHolidays();
-    this.generateCalendar();
-  }
   weekdays: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   generateCalendar() {
@@ -53,7 +66,6 @@ export class CalendarComponent implements OnInit {
   }
   eventsForDay(day: number): Event[] {
     const dayString = `${this.currentMonth.getFullYear()}-${this.currentMonth.getMonth() + 1}-${day}`;
-    console.log(dayString);
     
     return this.holidays.filter(holiday => holiday.date === dayString);
   }
@@ -97,8 +109,22 @@ export class CalendarComponent implements OnInit {
   }
   
 
-
   addHoliday() {
     this.router.navigate(['edit'], {relativeTo: this.route})
   }
+
+
+
+  eventEdit(event: Event) {
+    this.router.navigate(['edit'], {relativeTo: this.route, state: {...event, edit: true}});
+  }
+
+
+  deleteHoliday(event: Event) {
+    if (confirm('Are you sure you want to delete this holiday?')) {
+      this.holidays = this.holidays.filter(holiday => holiday.name !== event.name);
+      this.adminService.deleteHolidayEvent(event);
+    }
+  }
+
 }
