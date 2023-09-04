@@ -1,1 +1,34 @@
-<p>leave-request works!</p>
+<div class="row mt-5" style="--bs-gutter-x: 0;">
+    <div class="display-6 mb-3 me-2">Leave Requests</div>
+    <div class="col-md-4" *ngFor="let leaveRequest of requests">
+      <div class="card mb-3 me-2 ms-2 pop-in">
+        <div class="card-header">
+            Leave Requests
+        </div>
+        <div class="card-body">
+            <p class="card-text"><b>Email:</b> {{ leaveRequest.email }}</p>
+
+          <p class="card-text"><b>Reason:</b> {{ leaveRequest.reason }}</p>
+          <p class="card-text"><b>Date:</b> {{ leaveRequest.startDate | date:'mediumDate' }} - {{ leaveRequest.endDate | date:'mediumDate' }}</p>
+
+          <h5 class="card-title"><b>Type:</b> {{ leaveRequest.typeOfLeave }}</h5>
+
+          
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <button mat-raised-button color="primary" (click)="approve(leaveRequest)">Approve</button>
+          <button mat-raised-button color="warn" (click)="reject(leaveRequest)">Reject</button>
+          </div>
+      </div>
+    </div>
+    <div *ngIf="!dataLoaded" class="display-6 w-100 d-flex justify-content-center border-primary text-white p-5 mt-5">
+      <div class="loadingio-spinner-double-ring-go5gv2wq7e"><div class="ldio-nexfnl3uix">
+          <div></div>
+          <div></div>
+          <div><div></div></div>
+          <div><div></div></div>
+          </div></div>
+    </div>
+    <div *ngIf="requests?.length==0" class="bg-secondary text-white p-5 d-flex justify-content-center align-items-center display-6">No Pending Requests</div>
+  </div>
+  

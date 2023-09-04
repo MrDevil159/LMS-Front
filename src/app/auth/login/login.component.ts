@@ -20,7 +20,7 @@ export class LoginComponent {
       userDataPromise.then((data: any) => {
         console.log('Fetching Auth Data...');
         if (this.authService.isAdmin()) {
-          this.router.navigate(['/users']);
+          this.router.navigate(['/leaves']);
         } else {
           this.router.navigate(['/leaves']);
         }

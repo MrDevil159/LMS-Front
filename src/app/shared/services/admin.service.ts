@@ -95,16 +95,21 @@ export class AdminService {
     });
   }
 
-  editHolidayData(nameOld:string, name: string, date: string, typeOfHoliday:string) {
+  editHolidayData(nameOld: string, name: string, date: string, typeOfHoliday: string) {
     const db = getDatabase();
-    remove(ref(db, 'holidays/' + nameOld))
-    .then(() => {
-      this.enterHolidayData(name, date, typeOfHoliday);
-    })
-    .catch((error) => {
-      console.log(error);
-      
-    });
+    const holidayRef = ref(db, 'holidays/' + nameOld);
+  
+    if (holidayRef) {
+      remove(holidayRef)
+        .then(() => {
+          this.enterHolidayData(name, date, typeOfHoliday);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      console.log('Reference does not exist or is invalid.');
+    }
   }
 
   deleteHolidayEvent(event: Event) {

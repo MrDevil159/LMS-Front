@@ -1,26 +1,31 @@
-<div class="container mt-5">
-  <div class="row justify-content-center width-90 m-auto">
-    <div class="display-6 col-md-2">Sign In</div>
-    <form class="col-md-10 contain">
-      <div class="mb-3">
-        <mat-form-field appearance="outline" style="width: 100%;">
-          <mat-label>Email address</mat-label>
-          <input matInput type="email" #userEmail (input)="nullError()">
-        </mat-form-field>
+<div class="row" style="--bs-gutter-x: 0;">
+  <div class="col-md-10 m-auto">
+    <div class="mt-5">
+      <div class="row justify-content-center width-90 m-auto">
+        <div class="display-6 col-md-2">Sign In</div>
+        <form class="col-md-10 contain">
+          <div class="mb-3">
+            <mat-form-field appearance="outline" style="width: 100%;">
+              <mat-label>Email address</mat-label>
+              <input matInput type="email" #userEmail (input)="nullError()">
+            </mat-form-field>
+          </div>
+          <div class="mb-3">
+            <mat-form-field appearance="outline" style="width: 100%;">
+              <mat-label>Enter your password</mat-label>
+              <input matInput [type]="hide ? 'password' : 'text'"  #userPassword (input)="nullError()">
+              <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+          <button type="button" mat-raised-button color="primary" (click)="onSignIn(userEmail.value, userPassword.value)">Submit</button>
+    
+          <button type="button" mat-raised-button color="accent" (click)="onForgotPassword(userEmail.value)" class="ms-1">Forgot Password</button>
+    
+        </form>
       </div>
-      <div class="mb-3">
-        <mat-form-field appearance="outline" style="width: 100%;">
-          <mat-label>Enter your password</mat-label>
-          <input matInput [type]="hide ? 'password' : 'text'"  #userPassword (input)="nullError()">
-          <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
-        </mat-form-field>
-      </div>
-      <button type="button" mat-raised-button color="primary" (click)="onSignIn(userEmail.value, userPassword.value)">Submit</button>
-
-      <button type="button" mat-raised-button color="accent" (click)="onForgotPassword(userEmail.value)" class="ms-1">Forgot Password</button>
-
-    </form>
+    </div>
   </div>
 </div>
+

@@ -14,12 +14,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
+import { TableViewComponent } from './table-view/table-view.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
     HolidayFormComponent,
     CalendarComponent,
-    CustomTooltipComponent
+    CustomTooltipComponent,
+    TableViewComponent
   ],
   imports: [
     CommonModule,
@@ -33,8 +37,9 @@ MatInputModule,
 MatFormFieldModule,
 MatIconModule,
 MatDatepickerModule,
-MatNativeDateModule
-    
+MatNativeDateModule,
+MatTableModule,
+MatPaginatorModule,    
   ]
 })
 export class HolidaysModule { }

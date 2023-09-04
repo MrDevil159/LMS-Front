@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, from, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Observer, firstValueFrom, from, throwError } from 'rxjs';
+import { catchError, first, tap } from 'rxjs/operators';
 import {
   Auth,
   getAuth,
@@ -13,6 +13,7 @@ import { getDatabase, ref, onValue } from "firebase/database";
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Database, set } from '@angular/fire/database';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -143,14 +144,57 @@ export class AuthService {
     }
   }
 
-
+  isAuthenticatedGuardCheck(): Observable<boolean> {
+    return new Observable<boolean>((observer: Observer<boolean>) => {
+      const userDate = this.authfb.currentUser;
+      if (userDate) {
+        observer.next(true);
+        observer.complete();
+      } else {
+        observer.next(false);
+        observer.complete();
+      }
+    });
+  }
   isAuthenticated(): boolean {
-    const userToken = this.userAuthSubject.value?.idToken;
+    const auth = getAuth();
+
+    const userToken = this.authfb.currentUser;
     return !!userToken;
   }
 
-  isAdmin(): boolean {
-    const userRole = this.userDataSubject.value?.role;    
+  isAdminGuardCheck(): Promise<boolean> {
+    return new Promise(async (resolve) => {
+      try {
+        // Wait for the userDataSubject to emit a value
+        const userData = await firstValueFrom(this.userDataSubject);
+        
+        // Check the user role and resolve the promise accordingly
+        if (userData?.role === 'ADMIN') {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      } catch (error) {
+        // Handle any errors here
+        console.error('Error checking admin status:', error);
+        resolve(false); // You can handle this case as needed
+      }
+    });
+  }
+  
+  
+  
+  
+  
+  
+  
+
+  isAdmin():Boolean {
+    console.log();
+    
+    const userRole = this.userDataSubject.value?.role; 
+   
     return userRole === 'ADMIN';
   }
 
@@ -168,6 +212,7 @@ export class AuthService {
         this.showErrorSnackbar(errorMessage);
       });
   }
+  router = inject(Router);
   isLoggedIn() {
     console.log('checking');
     this.authfb.onAuthStateChanged((res) => {
@@ -179,6 +224,9 @@ export class AuthService {
           this.userAuthSubject.next(this.authfb.currentUser);
           console.log(this.userAuthSubject.value);
           console.log(data);
+          if(data.role === 'ADMIN' || data.role === 'USER') {
+            this.router.navigate(['/leaves']);
+          }
         });
       }
     });
@@ -190,4 +238,7 @@ export class AuthService {
     this.userAuthSubject.next(null);
     this.userDataSubject.next(null);
   }
+
+
+
 }

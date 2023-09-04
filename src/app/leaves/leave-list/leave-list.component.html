@@ -1,1 +1,42 @@
-<p>leave-list works!</p>
+<div class="d-flex flex-column m-5">
+    <div class="top d-flex justify-content-between">
+        <div class="display-6">Leaves List</div>
+
+        <div class="buttongroup">
+            <button *ngIf="isAdmin()" mat-raised-button class="me-2" color="primary" routerLink="requests" aria-label="Admin Center">
+                <mat-icon>shield_person</mat-icon>
+                Admin Center
+              </button>
+              <button mat-raised-button color="primary" routerLink="apply" aria-label="Apply for Leaves">
+                <mat-icon>add</mat-icon>
+                Apply Leave
+              </button>
+
+        </div>
+
+  
+    </div>
+    
+    <ng-container *ngIf="dataLoaded">
+      <mat-tab-group animationDuration="500ms" mat-stretch-tabs="false" mat-align-tabs="center">
+        <mat-tab label="Pending">
+          <app-table-data [data]="pending"></app-table-data>
+        </mat-tab>
+        <mat-tab label="Confirmed">
+          <app-table-data [data]="confirmed"></app-table-data>
+        </mat-tab>
+        <mat-tab label="Rejected">
+          <app-table-data [data]="rejected"></app-table-data>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-container>
+    <div *ngIf="!dataLoaded" class="display-6 w-100 d-flex justify-content-center border-primary text-white p-5 mt-5">
+        <div class="loadingio-spinner-double-ring-go5gv2wq7e"><div class="ldio-nexfnl3uix">
+            <div></div>
+            <div></div>
+            <div><div></div></div>
+            <div><div></div></div>
+            </div></div>
+    </div>
+  </div>
+  

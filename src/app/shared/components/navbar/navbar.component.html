@@ -1,14 +1,14 @@
 <mat-toolbar class="justify-content-between">
-  <div fxHide.gt-xs>
+  <div class="d-block d-md-none">
       <button mat-icon-button (click)="onToggleSidenav()">
           <mat-icon>menu</mat-icon>
       </button>
   </div>
 
-  <div>
-              <a routerLink="/leaves" class="me-1 ms-1" *ngIf="authService.isAuthenticated() || authService.isAdmin()">Leaves</a>
-              <a routerLink="/users" class="me-1 ms-1" *ngIf="authService.isAdmin()">Users</a>
-              <a routerLink="/holidays" class="me-1 ms-1" *ngIf="authService.isAdmin()">Holidays</a>
+  <div class="d-none d-md-block">
+              <a routerLink="/leaves" routerLinkActive="isActive" class="me-1 ms-1" *ngIf="authService.isAuthenticated() || authService.isAdmin()">Leaves</a>
+              <a routerLink="/users" routerLinkActive="isActive" class="me-1 ms-1" *ngIf="authService.isAdmin()">Users</a>
+              <a routerLink="/holidays" routerLinkActive="isActive" class="me-1 ms-1" *ngIf="authService.isAdmin()">Holidays</a>
               <a routerLink="/" class="me-1 ms-1" *ngIf="authService.isAuthenticated() || authService.isAdmin()" (click)="authService.logout()">Logout</a>
 
   </div>

@@ -1,0 +1,112 @@
+@keyframes ldio-nexfnl3uix {
+    0% { transform: rotate(0) }
+    100% { transform: rotate(360deg) }
+  }
+  .ldio-nexfnl3uix div { box-sizing: border-box!important }
+  .ldio-nexfnl3uix > div {
+    position: absolute;
+    width: 144px;
+    height: 144px;
+    top: 28px;
+    left: 28px;
+    border-radius: 50%;
+    border: 16px solid #000;
+    border-color: #3f51b5 transparent #3f51b5 transparent;
+    animation: ldio-nexfnl3uix 1s linear infinite;
+  }
+  
+  .ldio-nexfnl3uix > div:nth-child(2), .ldio-nexfnl3uix > div:nth-child(4) {
+    width: 108px;
+    height: 108px;
+    top: 46px;
+    left: 46px;
+    animation: ldio-nexfnl3uix 1s linear infinite reverse;
+  }
+  .ldio-nexfnl3uix > div:nth-child(2) {
+    border-color: transparent #3f51b5 transparent #3f51b5
+  }
+  .ldio-nexfnl3uix > div:nth-child(3) { border-color: transparent }
+  .ldio-nexfnl3uix > div:nth-child(3) div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: rotate(45deg);
+  }
+  .ldio-nexfnl3uix > div:nth-child(3) div:before, .ldio-nexfnl3uix > div:nth-child(3) div:after { 
+    content: "";
+    display: block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: -16px;
+    left: 48px;
+    background: #3f51b5;
+    border-radius: 50%;
+    box-shadow: 0 128px 0 0 #3f51b5;
+  }
+  .ldio-nexfnl3uix > div:nth-child(3) div:after {
+    left: -16px;
+    top: 48px;
+    box-shadow: 128px 0 0 0 #3f51b5;
+  }
+  
+  .ldio-nexfnl3uix > div:nth-child(4) { border-color: transparent; }
+  .ldio-nexfnl3uix > div:nth-child(4) div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: rotate(45deg);
+  }
+  .ldio-nexfnl3uix > div:nth-child(4) div:before, .ldio-nexfnl3uix > div:nth-child(4) div:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: -16px;
+    left: 30px;
+    background: #3f51b5;
+    border-radius: 50%;
+    box-shadow: 0 92px 0 0 #3f51b5;
+  }
+  .ldio-nexfnl3uix > div:nth-child(4) div:after {
+    left: -16px;
+    top: 30px;
+    box-shadow: 92px 0 0 0 #3f51b5;
+  }
+  .loadingio-spinner-double-ring-go5gv2wq7e {
+    width: 200px;
+    height: 200px;
+    display: inline-block;
+    overflow: hidden;
+  }
+  .ldio-nexfnl3uix {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform: translateZ(0) scale(1);
+    backface-visibility: hidden;
+    transform-origin: 0 0; /* see note above */
+  }
+  .ldio-nexfnl3uix div { box-sizing: content-box; }
+  
+
+
+
+  /* Define the animation */
+@keyframes popIn {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* Apply the animation to an element */
+  .card.pop-in {
+    animation: popIn 0.3s ease-in-out;
+  }
+  

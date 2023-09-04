@@ -1,14 +1,14 @@
-<div class="d-flex flex-xl-row flex-column m-5">
-    <div class="display-6">Holidays</div>
+<div class="container">
+    <div class="display-6 mt-2">Holidays</div>
   
-    <form [formGroup]="holidayForm" class="container" (ngSubmit)="edit? editInDatabase(oldName) : enterToDatabase()">
-      <mat-form-field class="w-100" appearance="fill">
+    <form [formGroup]="holidayForm"  (ngSubmit)="edit? editInDatabase(oldName) : enterToDatabase()">
+      <mat-form-field class="w-100" appearance="outline">
         <mat-label for="name">Name</mat-label>
         <input type="text" id="name" matInput formControlName="name">
       </mat-form-field>
     
     
-      <mat-form-field class="w-100 mb-2" appearance="fill">
+      <mat-form-field class="w-100 mb-2" appearance="outline">
             <mat-label>Date</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="date">
             <mat-hint>MM/DD/YYYY</mat-hint>
@@ -17,7 +17,7 @@
       </mat-form-field>
     
     
-      <mat-form-field class="w-100" appearance="fill">
+      <mat-form-field class="w-100" appearance="outline">
         <mat-label for="typeOfHoliday">Type</mat-label>
         <mat-select id="typeOfHoliday" formControlName="typeOfHoliday">
           <mat-option value="COMPANY">Company</mat-option>
@@ -25,7 +25,9 @@
         </mat-select>
       </mat-form-field>
     <br>
-      <button mat-raised-button color="primary" type="submit" [disabled]="this.holidayForm.invalid">{{edit ? 'Edit':'Submit'}}</button>
+      <button mat-raised-button color="primary" class="me-1" type="submit" [disabled]="this.holidayForm.invalid">{{edit ? 'Edit':'Submit'}}</button>
+      <button mat-raised-button color="primary" type="button" (click)="goBack()">Go Back</button>
+
     </form>
   </div>
     

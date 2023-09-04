@@ -1,7 +1,6 @@
 <div class="container">
-    <button (click)="getLeaves()">get</button>
-    <h2>Leave Application Form</h2>
-    <form [formGroup]="leaveForm" (ngSubmit)="onSubmit()">
+    <div class="display-6 mt-2">Leave Application Form</div>
+    <form [formGroup]="leaveForm" (ngSubmit)="edit? onEdit() : onSubmit()">
 
       <mat-form-field class="w-100"  appearance="outline">
         <input matInput [matDatepicker]="startDatePicker" placeholder="Start Date" formControlName="startDate">
@@ -24,9 +23,11 @@
       <mat-form-field class="w-100"  appearance="outline">
         <textarea matInput placeholder="Reason" formControlName="reason"></textarea>
       </mat-form-field>
-      <button mat-raised-button color="primary" type="submit" [disabled]="leaveForm.invalid">Apply Leave</button>
-    </form>
+      <button mat-raised-button color="primary" type="submit" [disabled]="leaveForm.invalid" class="me-1">{{edit? 'Edit Leave':'Apply Leave'}}</button>
+      <button mat-raised-button color="primary" type="button" (click)="goBack()">Go Back</button>
 
+    </form>
+    
 
 </div>
 

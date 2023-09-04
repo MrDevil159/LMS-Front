@@ -1,10 +1,17 @@
-<div class="d-flex w-80 justify-content-end mt-2">
+<div class="m-5">
+<div class="d-flex w-80 justify-content-between mt-2">
+  <div class="display-6">Holidays</div>
+  <div class="btngroup">
+    <button mat-raised-button class="me-2" color="primary" routerLink="list">
+      List View
+    </button>
+    <button mat-raised-button color="primary" (click)="addHoliday()">
+      Add Holiday
+    </button>
+  </div>
 
-  <button mat-raised-button color="primary" (click)="addHoliday()">
-    Add Holiday
-  </button>
 </div>
-<div class="calendar d-flex justify-content-center m-auto flex-column mt-2 mb-2">
+<div class="calendar d-flex justify-content-center m-auto flex-column mt-4 mb-2">
 
   <div class="month-switcher">
     <button (click)="previousMonth()" mat-raised-button color="primary">Previous</button>
@@ -47,3 +54,4 @@
 
 
 
+</div>

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from './shared/services/auth.service';
+import { NavigationService } from './shared/services/navigation.service';
 
 @Component({
   selector: 'app-root',
@@ -9,8 +10,9 @@ import { AuthService } from './shared/services/auth.service';
 export class AppComponent {
   title = 'LMS';
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private navService:NavigationService) {
     this.authService.isLoggedIn();
+    this.navService.startSaveHistory();
   }
 
 }

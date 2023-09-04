@@ -6,6 +6,18 @@ a:hover, a:active{
     color: lightgray;
 }
 .nav-caption{
-    display: inline-block;
     padding-left: 6px;
 }
+
+
+.menuItem { 
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.list-item-active {
+    font-weight: bold;
+    color: #bdbdbd !important;
+    background: rgba(0, 0, 0, 0.04);
+  }

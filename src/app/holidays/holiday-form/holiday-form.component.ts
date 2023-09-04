@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AdminService } from 'src/app/shared/services/admin.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { NavigationService } from 'src/app/shared/services/navigation.service';
 
 @Component({
   selector: 'app-holiday-form',
@@ -13,10 +14,12 @@ export class HolidayFormComponent {
   edit = false;
   oldName!:string;
   holidayForm: FormGroup;
-  constructor(private adminService: AdminService, private fb:FormBuilder, private authService:AuthService, private router: Router) {
+  goto!: string;
+  constructor(private adminService: AdminService, private fb:FormBuilder, private authService:AuthService, private router: Router,  private navService:NavigationService) {
     const editMode = this.router.getCurrentNavigation()!.extras.state;
     if (editMode) {
       const parsedDate = new Date(editMode['date']);
+      this.goto = editMode['goto'];
       this.edit = true;
       this.oldName = editMode['name'];
       this.holidayForm = this.fb.group({
@@ -70,7 +73,11 @@ export class HolidayFormComponent {
         'Editing Holiday Holiday successfully'
       );
       this.holidayForm.reset();
+      if(this.goto=='calendar') {
       this.router.navigate(['/holidays']);
+      } else if(this.goto =='list') {
+        this.router.navigate(['/holidays/list']);
+      }
 
     } catch(error) {
       this.authService.showErrorSnackbar(
@@ -78,6 +85,10 @@ export class HolidayFormComponent {
       );
       console.log(error);
     }
+    
   }
 
+  goBack() {
+    this.navService.goBack();
+  }
 }

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HolidayOutletComponent } from './holiday-outlet/holiday-outlet.component';
 import { HolidayFormComponent } from './holiday-form/holiday-form.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import { TableViewComponent } from './table-view/table-view.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
         path: 'edit',
         component: HolidayFormComponent,
       },
+      {
+        path: 'list',
+        component: TableViewComponent
+      }
     ],
   },
 ];

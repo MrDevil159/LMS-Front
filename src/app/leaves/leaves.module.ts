@@ -16,14 +16,27 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+
 import { MatSelectModule } from '@angular/material/select';
+
+
+import {MatTabsModule} from '@angular/material/tabs';
+import { TableDataComponent } from './table-data/table-data.component';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatTableModule} from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCardModule } from '@angular/material/card';
+
+
+
 
 @NgModule({
   declarations: [
     LeavesOutletComponent,
     LeaveListComponent,
     ApplyLeaveComponent,
-    LeaveRequestComponent
+    LeaveRequestComponent,
+    TableDataComponent,
   ],
   imports: [
     CommonModule,
@@ -35,7 +48,13 @@ import { MatSelectModule } from '@angular/material/select';
     MatNativeDateModule,
     MatButtonModule,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTabsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatIconModule,
+    MatSortModule,
+    MatCardModule
   ]
 })
 export class LeavesModule { }

@@ -1,0 +1,75 @@
+<div class="mat-elevation-z8 example-container">
+  <mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="startDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Start Date</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.startDate | date : "mediumDate" }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="endDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>End Date</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.endDate | date : "mediumDate" }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.status }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="typeOfLeave">
+      <mat-header-cell *matHeaderCellDef>Type of Leave</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.typeOfLeave }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="reason">
+      <mat-header-cell *matHeaderCellDef>Reason</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.reason }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <button
+          mat-mini-fab
+          color="primary"
+          (click)="editLeave(element)"
+          aria-label="Delete"
+          class="me-1"
+          *ngIf="element.status === 'PENDING'"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="element.status === 'PENDING'"
+          mat-mini-fab
+          color="warn"
+          (click)="deleteLeave(element)"
+          aria-label="Delete"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+
+        <button mat-icon-button color="warn" aria-label="Success" *ngIf="element.status==='CONFIRMED'">
+            <mat-icon>favorite</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" aria-label="Success" *ngIf="element.status==='REJECTED'">
+            <mat-icon>cancel</mat-icon>
+          </button>
+
+        </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+    aria-label="Select page of periodic elements"
+  >
+  </mat-paginator>
+</div>

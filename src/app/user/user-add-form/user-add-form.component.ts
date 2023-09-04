@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AdminService } from 'src/app/shared/services/admin.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { NavigationService } from 'src/app/shared/services/navigation.service';
 
 @Component({
   selector: 'app-user-add-form',
@@ -16,14 +17,15 @@ export class UserAddFormComponent {
     private fb: FormBuilder,
     private adminService: AdminService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private navService:NavigationService
   ) {
     this.newUser = this.fb.group({
-      name: [''],
-      email: [''],
-      designation: [''],
-      password: [''],
-      role: [''],
+      name: ['', Validators.required],
+      email: ['', Validators.required],
+      designation: ['', Validators.required],
+      password: ['', Validators.required],
+      role: ['', Validators.required],
     });
     const editMode = this.router.getCurrentNavigation()!.extras.state;
     if (editMode) {
@@ -74,5 +76,8 @@ export class UserAddFormComponent {
           console.log('onAddUser function completed');
         },
       });
+  }
+  goBack() {
+    this.navService.goBack();
   }
 }

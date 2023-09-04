@@ -116,7 +116,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 
   eventEdit(event: Event) {
-    this.router.navigate(['edit'], {relativeTo: this.route, state: {...event, edit: true}});
+    this.router.navigate(['edit'], {relativeTo: this.route, state: {...event, edit: true, goto: 'calendar'}});
   }
 
 
