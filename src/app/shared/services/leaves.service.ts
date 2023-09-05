@@ -122,7 +122,7 @@ export class LeavesService {
     try {
       console.log(leave);
       await set(ref(db, 'leaves/' + refId), leave);
-      this.authService.showErrorSnackbar('Editing Leave Request Successful');
+      this.authService.showErrorSnackbar('Editing Leave Request Successful', 5000);
     } catch (error) {
       throw error;
     }
@@ -183,12 +183,12 @@ export class LeavesService {
       update(reference, updates).then(
         () => {
           observer.next(leaveRequest);
-          this.authService.showErrorSnackbar('Leave Request Updated Successfully');
+          this.authService.showErrorSnackbar('Leave Request Updated Successfully', 5000);
           observer.complete();
         },
         (reason) => {
           observer.error(reason);
-          this.authService.showErrorSnackbar(`Leave Request Updation Failed ${reason}`);
+          this.authService.showErrorSnackbar(`Leave Request Updation Failed ${reason}`, 5000);
         }
       );
     });

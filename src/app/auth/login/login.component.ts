@@ -28,7 +28,7 @@ export class LoginComponent {
     }).catch((error: any) => {
       console.log(error);
       this.error = error;
-      this.authService.showErrorSnackbar(error);
+      this.authService.showErrorSnackbar(error, 5000);
 
     });
   }
@@ -36,7 +36,7 @@ export class LoginComponent {
     console.log(email.trim().length);
     
     if(email.trim().length == 0) {
-      this.authService.showErrorSnackbar('Please enter email field');
+      this.authService.showErrorSnackbar('Please enter email field', 5000);
 
 
     } else {

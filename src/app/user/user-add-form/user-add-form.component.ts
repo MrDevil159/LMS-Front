@@ -1,3 +1,4 @@
+import { state } from '@angular/animations';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,7 +13,9 @@ import { NavigationService } from 'src/app/shared/services/navigation.service';
 })
 export class UserAddFormComponent {
   newUser: FormGroup;
-
+  uid!: string;
+  oldEmail!: string;
+  editMode!: any;
   constructor(
     private fb: FormBuilder,
     private adminService: AdminService,
@@ -27,19 +30,23 @@ export class UserAddFormComponent {
       password: ['', Validators.required],
       role: ['', Validators.required],
     });
-    const editMode = this.router.getCurrentNavigation()!.extras.state;
-    if (editMode) {
+    this.editMode = this.router.getCurrentNavigation()!.extras.state;
+    if (this.editMode) {
+      this.uid = this.editMode['uid'];
+      this.oldEmail = this.editMode['email'];
+      console.log(this.uid);
       this.newUser.setValue({
-        name: editMode['name'],
-        email: [''],
-        designation: editMode['designation'],
+        name: this.editMode['name'],
+        email: this.editMode['email'],
+        designation: this.editMode['designation'],
         password: [''],
-        role: editMode['name'],
+        role: this.editMode['role'],
       });
     }
   }
 
   onAddUser() {
+    const email = this.newUser.value.email;
     console.log(this.newUser.value);
     this.adminService
       .registerUser(this.newUser.value.email, this.newUser.value.password)
@@ -58,24 +65,46 @@ export class UserAddFormComponent {
                 this.newUser.reset();
                 this.authService.showErrorSnackbar(
                   'Adding new user successful'
-                );
-                this.router.navigate(['/users']);
+                ,3000);
+                this.authService.forgotPassword(email);
+                this.router.navigate(['/users'], { state: { refresh: false } });
               },
               error: (error) => {
                 console.log(error);
-                this.authService.showErrorSnackbar(error.errors.message);
+                this.authService.showErrorSnackbar(error.errors.message,5000);
               },
               complete: () =>
                 console.log('Completed inserting of data Model subscription'),
             });
         },
         error: (error) => {
-          this.authService.showErrorSnackbar(error);
+          this.authService.showErrorSnackbar(error, 5000);
         },
         complete: () => {
           console.log('onAddUser function completed');
         },
       });
+  }
+
+  onEditUser() {
+    this.authService.showErrorSnackbar('Please Wait ...',5000);
+    this.adminService.editUser(this.uid, {
+      designation: this.newUser.value.designation,
+      oldEmail: this.oldEmail,
+      email: this.newUser.value.email,
+      name: this.newUser.value.name,
+      password: this.newUser.value.password,
+      role: this.newUser.value.role,
+    }).subscribe({
+      next: (res)=> {
+        this.authService.showErrorSnackbar('Update Successfully', 5000);
+        this.router.navigate(['/users'], { state: { refresh: true } });
+      },
+      error: (err)=> {
+        console.log(err);
+        this.authService.showErrorSnackbar(err.errors.message, 5000);
+      }
+    })
   }
   goBack() {
     this.navService.goBack();

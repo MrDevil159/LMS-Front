@@ -48,7 +48,7 @@ export class TableDataComponent implements AfterViewInit {
         (response) => {
           console.log(response);
           const index = this.dataSource.data.findIndex(item => item === elem);
-          this.authService.showErrorSnackbar('Deleted Leave Request Successfully');
+          this.authService.showErrorSnackbar('Deleted Leave Request Successfully', 5000);
           if (index >= 0) {
             this.dataSource.data.splice(index, 1);
             this.dataSource._updateChangeSubscription();
@@ -57,7 +57,7 @@ export class TableDataComponent implements AfterViewInit {
       );
     } else {
       console.log('Cannot delete: Invalid key');
-      this.authService.showErrorSnackbar('Deletion Failed');
+      this.authService.showErrorSnackbar('Deletion Failed', 5000);
 
     }
   }

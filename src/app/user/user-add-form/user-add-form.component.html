@@ -1,32 +1,9 @@
-<!-- <form [formGroup]="newUser" (ngSubmit)="onAddUser()">
-    <label for="name">Name</label>
-    <input type="text" id="name" formControlName="name">
-  
-    <label for="email">Email</label>
-    <input type="email" id="email" formControlName="email">
-  
-    <label for="designation">Designation</label>
-    <input type="text" id="designation" formControlName="designation">
-  
-    <label for="password">Password</label>
-    <input type="password" id="password" formControlName="password">
-  
-    <label for="role">Role</label>
-    <select id="role" formControlName="role">
-      <option value="admin">Admin</option>
-      <option value="user">User</option>
-    </select>
-  
-    <button type="submit">Submit</button>
-  </form>
-   -->
-
 <div class="row" style="--bs-gutter-x: 0;">
   <div class="col-md-10 m-auto">
     <div class="container">
       <div class="display-6 mt-2">Add User</div>
     
-      <form [formGroup]="newUser" (ngSubmit)="onAddUser()">
+      <form [formGroup]="newUser" (ngSubmit)="editMode? onEditUser() : onAddUser()">
         <mat-form-field class="w-100" appearance="outline">
           <mat-label for="name">Name</mat-label>
           <input type="text" id="name" matInput formControlName="name">
@@ -55,7 +32,7 @@
           </mat-select>
         </mat-form-field>
       <br>
-        <button mat-raised-button color="primary" type="submit" [disabled]="newUser.invalid" class="me-1">Add User</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="newUser.invalid" class="me-1">{{ editMode? 'Edit User' : 'Add User' }}</button>
         <button mat-raised-button color="primary" type="button" (click)="goBack()">Go Back</button>
     
       </form>

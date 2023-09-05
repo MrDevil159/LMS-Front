@@ -76,14 +76,14 @@ export class ApplyLeaveComponent implements OnInit {
       today.setHours(0, 0, 0, 0);
 
       if (startDate.getTime() <= today.getTime() - 1) {
-        this.authService.showErrorSnackbar('Date should be greater than today');
+        this.authService.showErrorSnackbar('Date should be greater than today', 5000);
         return;
       }
 
       if (endDate.getTime() <= startDate.getTime() - 1) {
         this.authService.showErrorSnackbar(
           'End date should be greater than start date'
-        );
+        , 5000);
         return;
       }
       const leave = {
@@ -111,13 +111,13 @@ export class ApplyLeaveComponent implements OnInit {
       today.setHours(0, 0, 0, 0);
 
       if (startDate.getTime() <= today.getTime() - 1) {
-        this.authService.showErrorSnackbar('Date should be greater than today');
+        this.authService.showErrorSnackbar('Date should be greater than today', 5000);
         return;
       }
 
       if (endDate.getTime() <= startDate.getTime() - 1) {
         this.authService.showErrorSnackbar(
-          'End date should be greater than start date'
+          'End date should be greater than start date', 5000
         );
         return;
       }

@@ -30,8 +30,16 @@
     <div *ngFor="let day of daysInMonth" [ngClass]="{ today: isToday(day) }" class="day" (click)="showTooltip($event, day)">
       {{ day }}
 
-      <div *ngFor="let event of eventsForDay(day)" class="event" [matTooltip]="event.name"
-      matTooltipPosition="above" (click)="eventEdit(event)">{{ event.name }}  <span class="del bg-danger" (click)="deleteHoliday(event)">×</span></div>
+      <div class="d-flex flex-row">
+        <div *ngFor="let event of eventsForDay(day)" class="event" [matTooltip]="event.name"
+      matTooltipPosition="above"
+      [class.casual]="event.typeOfHoliday === 'Casual Leave'"
+      [class.sick] = "event.typeOfHoliday === 'Sick Leave'"
+      [class.lop] = "event.typeOfHoliday === 'Loss of Pay'"
+      >
+      o</div>
+      </div>
+      
     </div>
   </div>
   

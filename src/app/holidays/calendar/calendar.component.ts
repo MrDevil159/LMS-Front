@@ -2,7 +2,9 @@ import { Component, OnInit, ElementRef, AfterViewInit, OnDestroy } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Event } from 'src/app/shared/model/Event.model';
+import { LeaveModel } from 'src/app/shared/model/LeaveRequest.model';
 import { AdminService } from 'src/app/shared/services/admin.service';
+import { LeavesService } from 'src/app/shared/services/leaves.service';
 
 
 @Component({
@@ -11,35 +13,64 @@ import { AdminService } from 'src/app/shared/services/admin.service';
   styleUrls: ['./calendar.component.css']
 })
 export class CalendarComponent implements OnInit, OnDestroy {
-  constructor(private el: ElementRef, private adminService: AdminService, private router: Router, private route:ActivatedRoute) {
-    
+  leaves:LeaveModel[] = [];
+  subscription!: Subscription;
+  constructor(private el: ElementRef, private adminService: AdminService, private router: Router, private route:ActivatedRoute, private leaveService:LeavesService) {
   }
-  ngOnDestroy(): void {
-    this.getValueHoliday.unsubscribe();
-  }
-  holidays: Event[] = [
-    
-  ];
+ 
+  holidays: Event[] = [];
   getValueHoliday!:Subscription;
   ngOnInit() {
-      this.getValueHoliday = this.adminService.getAllHoliday().subscribe(
+    this.subscription = this.leaveService.getAllLeaves('CONFIRMED').subscribe(
       {
         next: (data) => {
-          // data.forEach(item => {
-          //   this.holidays.push(item);
-          // });
-          this.holidays = data;
+          this.leaves = data;
+          const uniqueHolidays = new Set<Event>(); // Create a Set to store unique Event objects
+  
+          this.leaves.forEach((leave) => {
+            const eventsForLeave = this.convertLeaveToEvent(leave);
+            eventsForLeave.forEach((event) => {
+              uniqueHolidays.add(event); // Add each Event object to the Set
+            });
+          });
+  
+          this.holidays = Array.from(uniqueHolidays); // Convert the Set back to an array
+  
+          this.getValueHoliday = this.adminService.getAllHoliday().subscribe(
+            {
+              next: (datainner) => {
+                datainner.forEach((event) => {
+                  uniqueHolidays.add(event); // Add each Event object from datainner to the Set
+                });
+                this.holidays = Array.from(uniqueHolidays); // Convert the Set back to an array
+                console.log(this.holidays);
+
+              },
+              error: (err) => console.log(err),
+              complete: () => console.log('holiday complete')
+            }
+          );
         },
-        error: (err) => console.log(err),
-        complete: ()=> console.log('holiday complete')
+        error: (err) => {
+          console.log('Failed Loading Leaves', err);
+        },
+        complete: () => {
+          console.log('Completed Loading Leaves Subscription');
+        }
       }
-    )
+    );
+  
     this.updateDisplayedHolidays();
     this.generateCalendar();
   }
-
-
   
+  
+
+
+  ngOnDestroy(): void {
+    this.getValueHoliday.unsubscribe();
+    this.subscription.unsubscribe();
+  }
 
   daysInMonth: number[] = [];
 
@@ -104,7 +135,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   showTooltip(event: MouseEvent, day: number) {
     const target = event.target as HTMLElement;
     const rect = target.getBoundingClientRect();
-    this.tooltipText = this.eventsForDay(day).map(event => event.name).join(', ');
+    this.tooltipText = this.eventsForDay(day).map(event => `${event.name}(${event.typeOfHoliday})`).join(', ');
     this.tooltipVisible = true;
   }
   
@@ -126,5 +157,40 @@ export class CalendarComponent implements OnInit, OnDestroy {
       this.adminService.deleteHolidayEvent(event);
     }
   }
+
+
+
+
+  // Define a function to convert LeaveModel to Event
+  convertLeaveToEvent(leave: LeaveModel): Event[] {
+    const events: Event[] = [];
+    const startDate = new Date(leave.startDate);
+    const endDate = new Date(leave.endDate);
+  
+    if (leave.email) {
+      while (startDate <= endDate) {
+        const event: Event = {
+          name: leave.email,
+          date: this.formatDateToYYYYMD(startDate), // Format date as yyyy-mm-dd
+          typeOfHoliday: leave.typeOfLeave,
+        };
+        events.push(event);
+  
+        startDate.setDate(startDate.getDate() + 1);
+      }
+    }
+    
+    return events;
+  }
+  
+  formatDateToYYYYMD(date: Date): string {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // Adding 1 because getMonth() returns 0-based month (0 = January)
+    const day = date.getDate();
+  
+    // Use template literals to format the date
+    return `${year}-${month}-${day}`;
+  }
+
 
 }

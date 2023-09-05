@@ -94,8 +94,51 @@
   opacity: 0.9;
 }
 
+.casual {
+  background-color: #323b5c;
+  color: white;
+  padding: 0px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-top: 3px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.casual:hover {
+  background-color: #162c63;
+  opacity: 0.9;
+}
+.sick {
+  background-color: #ac3d33;
+  color: white;
+  padding: 0px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-top: 3px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.sick:hover {
+  background-color: #6a1b1b;
+  opacity: 0.9;
+}
+.lop {
+  background-color: #103a38;
+  color: white;
+  padding: 0px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-top: 3px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.lop:hover {
+  background-color: #103452;
+  opacity: 0.9;
+}
+
 .today {
-  background-color: #3f3f3f;
+  background-color: #7d7c7c;
   color: white;
   font-weight: bold;
 }

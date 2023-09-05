@@ -53,14 +53,14 @@ export class HolidayFormComponent {
     try {
       this.adminService.enterHolidayData(this.holidayForm.value.name, this.formatDateToYYYYMD(this.holidayForm.value.date), this.holidayForm.value.typeOfHoliday);
       this.authService.showErrorSnackbar(
-        'Adding new Holiday successfully'
+        'Adding new Holiday successfully', 5000
       );
       this.holidayForm.reset();
       this.router.navigate(['/holidays']);
 
     } catch(error) {
       this.authService.showErrorSnackbar(
-        'Error Adding Holiday'
+        'Error Adding Holiday', 5000
       );
       console.log(error);
     }
@@ -70,7 +70,7 @@ export class HolidayFormComponent {
     try {
       this.adminService.editHolidayData(nameOld, this.holidayForm.value.name, this.formatDateToYYYYMD(this.holidayForm.value.date), this.holidayForm.value.typeOfHoliday);
       this.authService.showErrorSnackbar(
-        'Editing Holiday Holiday successfully'
+        'Editing Holiday Holiday successfully', 5000
       );
       this.holidayForm.reset();
       if(this.goto=='calendar') {
@@ -81,7 +81,7 @@ export class HolidayFormComponent {
 
     } catch(error) {
       this.authService.showErrorSnackbar(
-        'Error Editing Holiday'
+        'Error Editing Holiday', 5000
       );
       console.log(error);
     }

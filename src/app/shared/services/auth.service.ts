@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, Observer, firstValueFrom, from, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, Observer, firstValueFrom, from, throwError, of } from 'rxjs';
 import { catchError, first, tap } from 'rxjs/operators';
 import {
   Auth,
@@ -8,12 +8,14 @@ import {
   signInWithEmailAndPassword,
   sendEmailVerification,
   sendPasswordResetEmail,
+  idToken,
 } from '@angular/fire/auth';
 import { getDatabase, ref, onValue } from "firebase/database";
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Database, set } from '@angular/fire/database';
 import { Router } from '@angular/router';
+import { NavigationService } from './navigation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -36,9 +38,9 @@ export class AuthService {
 
   private authenticate: Auth = inject(Auth);
 
-  showErrorSnackbar(message: string): void {
+  showErrorSnackbar(message: string, duration: number): void {
     this.snackBar.open(message, 'Close', {
-      duration: 5000,
+      duration: duration,
       // panelClass: 'error-snackbar',
     });
   }
@@ -78,21 +80,6 @@ export class AuthService {
     return this.http.post(this.firebaseApiUrl, body).toPromise();
   }
 
-  private mapFirebaseErrorToMessage(error: any): string {
-    if (error && error.error && error.error.error) {
-      const firebaseError = error.error.error.message;
-      switch (firebaseError) {
-        case 'EMAIL_NOT_FOUND':
-          return 'Email not found.';
-        case 'INVALID_PASSWORD':
-          return 'Invalid password.';
-        default:
-          return 'An error occurred during login. Please try again.';
-      }
-    } else {
-      return 'An error occurred during login. Please try again.';
-    }
-  }
 
   fetchUserDataByEmail(email: string | null): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -100,10 +87,8 @@ export class AuthService {
         reject('Email is null');
         return;
       }
-  
       const db = getDatabase();
       const queryRef = ref(db, 'users/');
-      
       onValue(queryRef, (snapshot) => {
         const data = snapshot.toJSON();
 
@@ -184,12 +169,6 @@ export class AuthService {
   }
   
   
-  
-  
-  
-  
-  
-
   isAdmin():Boolean {
     console.log();
     
@@ -209,7 +188,7 @@ export class AuthService {
         const errorMessage = error.message;
         console.log(errorCode);
         console.log(errorMessage);
-        this.showErrorSnackbar(errorMessage);
+        this.showErrorSnackbar(errorMessage, 5000);
       });
   }
   router = inject(Router);
@@ -224,14 +203,24 @@ export class AuthService {
           this.userAuthSubject.next(this.authfb.currentUser);
           console.log(this.userAuthSubject.value);
           console.log(data);
-          if(data.role === 'ADMIN' || data.role === 'USER') {
+          if(data.role === 'USER') {
             this.router.navigate(['/leaves']);
+          } else if(data.role === 'ADMIN') {
+            this.router.navigate(['leaves', 'requests']);
           }
         });
       }
     });
     // return !!user;
   }
+
+
+  userIdToken(): string {
+    const idTokenPromise = this.userAuthSubject.value.accessToken;
+    return idTokenPromise;
+  }
+  
+  
 
   logout() {
     this.authfb.signOut();
