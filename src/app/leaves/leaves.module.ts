@@ -27,6 +27,7 @@ import {MatTableModule} from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -54,7 +55,8 @@ import { MatCardModule } from '@angular/material/card';
     MatPaginatorModule,
     MatIconModule,
     MatSortModule,
-    MatCardModule
+    MatCardModule,
+    FormsModule
   ]
 })
 export class LeavesModule { }

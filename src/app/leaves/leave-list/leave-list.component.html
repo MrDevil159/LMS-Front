@@ -2,14 +2,21 @@
     <div class="top d-flex justify-content-between">
         <div class="display-6">Leaves List</div>
 
-        <div class="buttongroup">
-            <button *ngIf="isAdmin()" mat-raised-button class="me-2" color="primary" routerLink="requests" aria-label="Admin Center">
+        <div class="buttongroup d-flex">
+            <button *ngIf="isAdmin()" mat-raised-button class="me-2 d-none d-md-flex" color="primary" routerLink="requests" aria-label="Admin Center">
                 <mat-icon>shield_person</mat-icon>
                 Admin Center
               </button>
-              <button mat-raised-button color="primary" routerLink="apply" aria-label="Apply for Leaves">
+              <button mat-raised-button color="primary" class="d-none d-md-flex" routerLink="apply" aria-label="Apply for Leaves">
                 <mat-icon>add</mat-icon>
                 Apply Leave
+              </button>
+
+              <button *ngIf="isAdmin()" mat-fab class="me-2 d-flex d-md-none" color="primary" routerLink="requests" aria-label="Admin Center">
+                <mat-icon>shield_person</mat-icon>
+              </button>
+              <button mat-fab color="primary" class="d-flex d-md-none" routerLink="apply" aria-label="Apply for Leaves">
+                <mat-icon>add</mat-icon>
               </button>
 
         </div>

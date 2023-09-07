@@ -1,13 +1,17 @@
 
-
-
 <div class="row d-flex justify-content-between align-items-center" style="--bs-gutter-x: 0rem;">
     <div class="col-md-10 m-auto">
       <div class="d-flex justify-content-between mt-5 me-5 ms-5">
         <div class="display-6">Users List</div>
-        <div class="buttongrp"><a routerLink="add" class="me-1 ms-1"><button mat-raised-button color="primary">Add User</button></a>
-          <button  class="me-1 ms-1" (click)="onGetUserData()" mat-raised-button color="primary">Load User</button></div>
+        <div class="buttongroup d-flex">
+          <a routerLink="add" class="me-2 d-none d-md-flex"><button mat-raised-button color="primary"><mat-icon>add</mat-icon> Add User</button></a>
 
+          <button  class="d-none d-md-flex" (click)="onGetUserData()" mat-raised-button color="primary"><mat-icon>sync</mat-icon> Load User</button>
+
+          <a routerLink="add" class="me-2 d-flex d-md-none"><button mat-fab color="primary"><mat-icon>add</mat-icon></button></a>
+
+          <button  class="d-flex d-md-none" (click)="onGetUserData()" mat-fab color="primary"><mat-icon>sync</mat-icon></button>
+        </div>
       </div>
 
         <div class="me-5 ms-5 mb-5">

@@ -2,12 +2,19 @@
         <div class="d-flex w-100 justify-content-between mt-2">
           <div class="display-6">Holiday List View</div>
 
-          <div class="btngroup">
-            <button mat-raised-button class="me-2" color="primary" routerLink="../">
-              Calendar View
+          <div class="buttongroup d-flex">
+            <button mat-raised-button class="me-2 d-none d-md-flex" color="primary" routerLink="../">
+              <mat-icon>calendar_month</mat-icon> Calendar View
             </button>
-            <button mat-raised-button color="primary" (click)="addHoliday()">
-              Add Holiday
+            <button mat-raised-button color="primary" class="d-none d-md-flex" (click)="addHoliday()">
+              <mat-icon>add</mat-icon> Add Holiday
+            </button>
+      
+            <button mat-fab class="me-2 d-flex d-md-none" color="primary" routerLink="../">
+              <mat-icon>calendar_month</mat-icon>
+            </button>
+            <button mat-fab class="d-flex d-md-none" color="primary" (click)="addHoliday()">
+              <mat-icon>add</mat-icon>
             </button>
           </div>
         </div>

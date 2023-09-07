@@ -136,6 +136,40 @@
   background-color: #103452;
   opacity: 0.9;
 }
+/* COMPANY leave */
+.company {
+  background-color: #ffbf00; /* Yellow */
+  color: #000; /* Black text */
+  padding: 0px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-top: 3px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.company:hover {
+  background-color: #ff9900; /* Darker yellow on hover */
+  opacity: 0.9;
+}
+
+/* GOVERNMENT leave */
+.govt {
+  background-color: #008000; /* Green */
+  color: #fff; /* White text */
+  padding: 0px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-top: 3px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.govt:hover {
+  background-color: #006600; /* Darker green on hover */
+  opacity: 0.9;
+}
+
 
 .today {
   background-color: #7d7c7c;
@@ -186,5 +220,76 @@
 
   .weekday {
     font-size: 14px;
+  }
+}
+
+
+.contNoScroll::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
+
+
+
+/* Legend container */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+    justify-content: center;
+}
+
+/* Legend item */
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+/* Color box */
+.color-box {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  border-radius: 3px;
+}
+
+/* Colors for each type */
+.event-color {
+  background-color: #606060; /* Event color */
+}
+
+.casual-color {
+  background-color: #323b5c; /* Casual Leave color */
+}
+
+.sick-color {
+  background-color: #ac3d33; /* Sick Leave color */
+}
+
+.lop-color {
+  background-color: #103a38; /* Loss of Pay color */
+}
+
+.company-leave-color {
+  background-color: #ffbf00; /* Company Leave color */
+}
+
+.government-leave-color {
+  background-color: #008000; /* Government Leave color */
+}
+
+/* Legend label */
+.legend-label {
+  font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+  .buttongroup{
+    z-index: 2;
+    position: fixed;
+    bottom: 4rem;
+    right: 1rem;
   }
 }

@@ -1,5 +1,4 @@
 <div class="custom-tooltip">
-    <div class="tooltip-content">
-      {{ tooltipText ? tooltipText : 'No Event'}}
-    </div>
+  <div class="tooltip-content" [innerHTML]="tooltipText ? tooltipText : 'No Event'">
   </div>
+</div>

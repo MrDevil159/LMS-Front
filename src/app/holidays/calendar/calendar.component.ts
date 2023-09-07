@@ -108,6 +108,27 @@ export class CalendarComponent implements OnInit, OnDestroy {
       this.currentMonth.getFullYear() === today.getFullYear()
     );
   }
+
+
+  groupByTypeOfHoliday(day: number): { [key: string]: Event } {
+    const events = this.eventsForDay(day); // Convert day to string when calling eventsForDay
+    const groupedEvents: { [key: string]: Event } = {};
+  
+    events.forEach((event) => {
+      const key = event.typeOfHoliday;
+      if (!groupedEvents[key]) {
+        groupedEvents[key] = event;
+      }
+    });
+  
+    return groupedEvents;
+  }
+  
+  getKeys(obj: any): string[] {
+    return Object.keys(obj);
+  }
+
+
   updateDisplayedHolidays() {
     const year = this.currentMonth.getFullYear();
     const month = this.currentMonth.getMonth() + 1;
@@ -122,12 +143,16 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() - 1, 1);
     this.updateDisplayedHolidays();
     this.generateCalendar();
+    this.tooltipVisible = false;
+
   }
   
   nextMonth() {
     this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 1);
     this.updateDisplayedHolidays();
     this.generateCalendar();
+    this.tooltipVisible = false;
+
   }
   tooltipVisible = false;
   tooltipText = '';
@@ -135,7 +160,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   showTooltip(event: MouseEvent, day: number) {
     const target = event.target as HTMLElement;
     const rect = target.getBoundingClientRect();
-    this.tooltipText = this.eventsForDay(day).map(event => `${event.name}(${event.typeOfHoliday})`).join(', ');
+    this.tooltipText = this.eventsForDay(day).map(event => `<div class="legend-item"><div class="color-box ${event.typeOfHoliday}"></div>${event.name}(${event.typeOfHoliday})</div>`).join('<br> ');
     this.tooltipVisible = true;
   }
   
@@ -161,7 +186,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 
 
-  // Define a function to convert LeaveModel to Event
+    // Define a function to convert LeaveModel to Event
   convertLeaveToEvent(leave: LeaveModel): Event[] {
     const events: Event[] = [];
     const startDate = new Date(leave.startDate);

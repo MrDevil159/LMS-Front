@@ -1,7 +1,7 @@
 .custom-tooltip {
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 5px 10px;
+  background-color: rgb(221 221 221);
+  color: black;
+  padding: 10px 10px;
   border-radius: 5px;
   font-size: 14px;
   z-index: 1000;
@@ -15,3 +15,41 @@
     text-overflow: ellipsis;
   }
   
+
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+  }
+/* Color box */
+.color-box {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  border-radius: 3px;
+}
+
+.event {
+  background-color: #606060; /* Event color */
+}
+
+.Casual {
+  background-color: #323b5c; /* Casual Leave color */
+}
+
+.Sick {
+  background-color: #ac3d33; /* Sick Leave color */
+}
+
+.Loss {
+  background-color: #103a38; /* Loss of Pay color */
+}
+
+.COMPANY {
+  background-color: #ffbf00; /* Company Leave color */
+}
+
+.GOVERNMENT {
+  background-color: #008000; /* Government Leave color */
+}

@@ -10,7 +10,7 @@ import { NavigationService } from './shared/services/navigation.service';
 export class AppComponent {
   title = 'LMS';
 
-  constructor(private authService: AuthService, private navService:NavigationService) {
+  constructor(public authService: AuthService, private navService:NavigationService) {
     this.authService.isLoggedIn();
     this.navService.startSaveHistory();
   }

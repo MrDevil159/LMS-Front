@@ -110,3 +110,12 @@
     animation: popIn 0.3s ease-in-out;
   }
   
+
+  @media screen and (max-width: 768px) {
+    .buttongroup{
+      position: fixed;
+      z-index: 2;
+      bottom: 4rem;
+      right: 1rem;
+    }
+  }

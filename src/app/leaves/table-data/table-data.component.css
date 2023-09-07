@@ -1,34 +1,49 @@
-.example-container {
-    display: flex;
+/* Add this to your component's CSS or a global stylesheet */
+.custom-card {
+  margin: 16px; /* Adds spacing around each card */
+  border-radius: 8px; /* Rounds the corners of the card */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+  transition: transform 0.2s; /* Adds a smooth hover effect */
+}
+
+.custom-card:hover {
+  transform: translateY(-5px); /* Raises the card slightly on hover */
+}
+
+.mat-card-title {
+  font-size: 1.2rem; /* Increases the title font size */
+}
+
+.mat-card-subtitle,
+.mat-card-content {
+  font-size: 1rem; /* Sets font size for subtitle and content */
+}
+
+.mat-card-actions {
+  display: flex;
+  justify-content: end;
+}
+
+
+/* CSS for larger screens */
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.custom-card {
+  width: calc(31.5% - 16px);
+  margin-bottom: 16px;
+}
+
+/* CSS for mobile screens */
+@media screen and (max-width: 768px) {
+  .card-container {
     flex-direction: column;
-    max-height: 500px;
-    min-width: 300px;
   }
-  
-  .mat-table {
-    overflow: auto;
-    max-height: 500px;
-  }
-  
-  .mobile-label {
-    display: none;
-  }
-  
-  @media(max-width: 600px) {
-    .mobile-label {
-      width: 80px;
-      display: inline-block;
-          font-weight: bold;
+
+  .custom-card {
+    width: 95%;
     }
-  
-    .mat-header-row {
-      display: none;
-    }
-  
-    .mat-row { 
-      flex-direction: column;
-      align-items: start;
-      padding: 8px 24px;
-    }
-  }
-  
+}

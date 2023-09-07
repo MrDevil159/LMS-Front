@@ -1,0 +1,8 @@
+@media screen and (max-width: 768px) {
+    .buttongroup{
+      z-index: 2;
+      position: fixed;
+      bottom: 4rem;
+      right: 1rem;
+    }
+  }

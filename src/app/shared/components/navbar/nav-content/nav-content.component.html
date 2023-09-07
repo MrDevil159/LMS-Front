@@ -31,7 +31,8 @@
     routerLink="/holidays"
     routerLinkActive
     #routerLinkActiveInstance="routerLinkActive"
-    [class.list-item-active]="routerLinkActiveInstance.isActive"    *ngIf="authService.isAdmin()"
+    [class.list-item-active]="routerLinkActiveInstance.isActive"    
+    *ngIf="authService.isAdmin()"
     (click)="onSidenavClose()"
   >
     <div class="menuItem">
@@ -42,9 +43,10 @@
 
   <a
     mat-list-item
-    routerLink="/"
-        *ngIf="authService.isAuthenticated() || authService.isAdmin()"
+    *ngIf="authService.isAuthenticated() || authService.isAdmin()"
     (click)="onSidenavClose()"
+    (click)="authService.logout()"
+    routerLink="/"
   >
     <div class="menuItem">
         <button mat-icon-button color="primary"><mat-icon>logout</mat-icon></button><span class="nav-caption">Logout</span>

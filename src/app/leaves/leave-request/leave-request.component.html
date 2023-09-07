@@ -1,5 +1,27 @@
-<div class="row mt-5" style="--bs-gutter-x: 0;">
-    <div class="display-6 mb-3 me-2">Leave Requests</div>
+<div class="row m-5" style="--bs-gutter-x: 0;">
+  <div class="top d-flex justify-content-between mb-2">
+    <div class="display-6">Leave Requests</div>
+
+    <div class="buttongroup d-flex">
+        <button  mat-raised-button class="me-2 d-none d-md-flex" color="primary" routerLink="../" aria-label="Admin Center">
+            <mat-icon>shield_person</mat-icon>
+            My Leaves
+          </button>
+          <button mat-raised-button color="primary" class="d-none d-md-flex" routerLink="../apply" aria-label="Apply for Leaves">
+            <mat-icon>add</mat-icon>
+            Apply Leave
+          </button>
+
+          <button  mat-fab class="me-2 d-flex d-md-none" color="primary" routerLink="../" aria-label="Admin Center">
+            <mat-icon>shield_person</mat-icon>
+          </button>
+          <button mat-fab color="primary" class="d-flex d-md-none" routerLink="../apply" aria-label="Apply for Leaves">
+            <mat-icon>add</mat-icon>
+          </button>
+
+    </div>
+</div>
+
     <div class="col-md-4" *ngFor="let leaveRequest of requests">
       <div class="card mb-3 me-2 ms-2 pop-in">
         <div class="card-header">
@@ -16,8 +38,16 @@
           
         </div>
         <div class="card-footer d-flex justify-content-between">
-            <button mat-raised-button color="primary" (click)="approve(leaveRequest)">Approve</button>
-          <button mat-raised-button color="warn" (click)="reject(leaveRequest)">Reject</button>
+            <button mat-raised-button color="primary" class="d-none d-md-flex" (click)="approve(leaveRequest)">Approve</button>
+          <button mat-raised-button color="warn" class="d-none d-md-flex" (click)="reject(leaveRequest)">Reject</button>
+
+          <button  mat-mini-fab class="d-flex d-md-none" color="primary" (click)="approve(leaveRequest)" aria-label="accept">
+            <mat-icon>done</mat-icon>
+          </button>
+          <button mat-mini-fab color="warn" class="d-flex d-md-none" (click)="reject(leaveRequest)" aria-label="Reject">
+            <mat-icon>close</mat-icon>
+          </button>
+
           </div>
       </div>
     </div>

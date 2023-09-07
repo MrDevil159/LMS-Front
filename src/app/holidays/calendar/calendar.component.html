@@ -1,58 +1,41 @@
 <div class="m-5">
-<div class="d-flex w-80 justify-content-between mt-2">
-  <div class="display-6">Holidays</div>
-  <div class="btngroup">
-    <button mat-raised-button class="me-2" color="primary" routerLink="list">
-      List View
-    </button>
-    <button mat-raised-button color="primary" (click)="addHoliday()">
-      Add Holiday
-    </button>
-  </div>
+  <div class="d-flex w-80 justify-content-between mt-2">
+    <div class="display-6">Holidays</div>
+    <div class="buttongroup d-flex">
+      <button mat-raised-button class="me-2 d-none d-md-flex" color="primary" routerLink="list">
+        <mat-icon>list</mat-icon> List View
+      </button>
+      <button mat-raised-button color="primary" class="d-none d-md-flex" (click)="addHoliday()">
+        <mat-icon>add</mat-icon> Add Holiday
+      </button>
 
-</div>
-<div class="calendar d-flex justify-content-center m-auto flex-column mt-4 mb-2">
-
-  <div class="month-switcher">
-    <button (click)="previousMonth()" mat-raised-button color="primary">Previous</button>
-
-    {{ currentMonth | date: 'MMMM yyyy' }}
-    <button (click)="nextMonth()" mat-raised-button color="primary">Next</button>
-
-  </div>
-  <div class="days-header">
-    <div *ngFor="let weekday of weekdays" class="weekday">{{ weekday }}</div>
-  </div>
-  
-  <div class="days" >
-    <div *ngFor="let emptyDay of emptyDaysBefore" class="empty-day"></div>
-  
-    <div *ngFor="let day of daysInMonth" [ngClass]="{ today: isToday(day) }" class="day" (click)="showTooltip($event, day)">
-      {{ day }}
-
-      <div class="d-flex flex-row">
-        <div *ngFor="let event of eventsForDay(day)" class="event" [matTooltip]="event.name"
-      matTooltipPosition="above"
-      [class.casual]="event.typeOfHoliday === 'Casual Leave'"
-      [class.sick] = "event.typeOfHoliday === 'Sick Leave'"
-      [class.lop] = "event.typeOfHoliday === 'Loss of Pay'"
-      >
-      o</div>
-      </div>
-      
+      <button mat-fab class="me-2 d-flex d-md-none" color="primary" routerLink="list">
+        <mat-icon>list</mat-icon>
+      </button>
+      <button mat-fab class="d-flex d-md-none" color="primary" (click)="addHoliday()">
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
   </div>
-  
-  
-  
-  
-  
-  
-  
-  <app-custom-tooltip *ngIf="tooltipVisible" [tooltipText]="tooltipText" class="mt-1"></app-custom-tooltip>
-  
+  <div
+    class="calendar d-flex justify-content-center m-auto flex-column mt-4 mb-2"
+  >
+    <div class="month-switcher">
+      <button (click)="previousMonth()" mat-raised-button color="primary">
+        Previous
+      </button>
 
-  
+      {{ currentMonth | date : "MMMM yyyy" }}
+      <button (click)="nextMonth()" mat-raised-button color="primary">
+        Next
+      </button>
+    </div>
+    <div class="days-header">
+      <div *ngFor="let weekday of weekdays" class="weekday">{{ weekday }}</div>
+    </div>
+
+    <div class="days">
+      <div *ngFor="let emptyDay of emptyDaysBefore" class="empty-day"></div>
 
 
 
@@ -62,4 +45,75 @@
 
 
 
+      <div *ngFor="let day of daysInMonth" [ngClass]="{ today: isToday(day) }" class="day" (click)="showTooltip($event, day)">
+        {{ day }}
+      
+        <div class="d-flex flex-column flex-md-row justify-content-center contNoScroll gap-1" style="overflow: scroll">
+          <div *ngFor="let eventType of getKeys(groupByTypeOfHoliday(day))" class="event" [matTooltip]="groupByTypeOfHoliday(day)[eventType].name" matTooltipPosition="above"
+  [class.casual]="eventType === 'Casual Leave'" [class.sick]="eventType === 'Sick Leave'" [class.lop]="eventType === 'Loss of Pay'"
+  [class.company]="eventType === 'COMPANY'" [class.govt]="eventType === 'GOVERNMENT'"
+  >
+  ○
+</div>
+        </div>
+      </div>
+      <!-- <div
+        *ngFor="let day of daysInMonth"
+        [ngClass]="{ today: isToday(day) }"
+        class="day"
+        (click)="showTooltip($event, day)"
+      >
+        {{ day }}
+
+        <div
+          class="d-flex flex-row justify-content-center contNoScroll"
+          style="overflow: scroll"
+        >
+          <div
+            *ngFor="let event of eventsForDay(day)"
+            class="event"
+            [matTooltip]="event.name"
+            matTooltipPosition="above"
+            [class.casual]="event.typeOfHoliday === 'Casual Leave'"
+            [class.sick]="event.typeOfHoliday === 'Sick Leave'"
+            [class.lop]="event.typeOfHoliday === 'Loss of Pay'"
+          >
+            ○
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="color-box event-color"></div>
+        <div class="legend-label">Event</div>
+      </div>
+      <div class="legend-item">
+        <div class="color-box casual-color"></div>
+        <div class="legend-label">Casual Leave</div>
+      </div>
+      <div class="legend-item">
+        <div class="color-box sick-color"></div>
+        <div class="legend-label">Sick Leave</div>
+      </div>
+      <div class="legend-item">
+        <div class="color-box lop-color"></div>
+        <div class="legend-label">Loss of Pay</div>
+      </div>
+      <div class="legend-item">
+        <div class="color-box company-leave-color"></div>
+        <div class="legend-label">Company Leave</div>
+      </div>
+      <div class="legend-item">
+        <div class="color-box government-leave-color"></div>
+        <div class="legend-label">Government Leave</div>
+      </div>
+    </div>
+    
+    <app-custom-tooltip
+      *ngIf="tooltipVisible"
+      [tooltipText]="tooltipText"
+      class="mt-1"
+    ></app-custom-tooltip>
+  </div>
 </div>

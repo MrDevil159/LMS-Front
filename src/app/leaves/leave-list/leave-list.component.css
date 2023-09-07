@@ -89,3 +89,14 @@
   transform-origin: 0 0; /* see note above */
 }
 .ldio-nexfnl3uix div { box-sizing: content-box; }
+
+
+
+@media screen and (max-width: 768px) {
+  .buttongroup{
+    position: fixed;
+    z-index: 2;
+    bottom: 4rem;
+    right: 1rem;
+  }
+}

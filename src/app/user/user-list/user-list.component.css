@@ -12,6 +12,14 @@
 .mat-elevation-z8 {    
   overflow-x: auto;
  }
+ @media screen and (max-width: 768px) {
+  .buttongroup{
+    position: fixed;
+    z-index: 2;
+    bottom: 4rem;
+    right: 1rem;
+  }
+}
 @media screen and (max-width: 960px) {
     .mat-table {
       border: 0;

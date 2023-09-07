@@ -4,8 +4,8 @@
       <app-nav-content (sidenavClose)="sidenav.close()"></app-nav-content>
     </mat-sidenav>
     <mat-sidenav-content>
-      <app-navbar (sidenavToggle)="sidenav.toggle()"></app-navbar>
-      <main>
+      <app-navbar *ngIf="authService.isAuthenticated()" (sidenavToggle)="sidenav.toggle()"></app-navbar>
+      <main class="mt-5">
         <router-outlet></router-outlet>
       </main>
     </mat-sidenav-content>
