@@ -141,6 +141,27 @@ export class LeavesService {
 
   private currentLeaves: LeaveModel[] = [];
 
+  getAllLeavesNew(status:string): Observable<LeaveModel[]> {
+    const db = getDatabase();
+    const leavesRef = ref(db, 'leaves');
+    const leavesQuery = query(
+      leavesRef,
+      orderByChild('status'),
+      equalTo(status)
+    );
+    return new Observable<LeaveModel[]>((subscriber) => {
+      const unsubscribe = onValue(leavesQuery, (snapshot) => {
+        const data = snapshot.val();
+        const leaves: LeaveModel[] = [];
+        snapshot.forEach((leaveSnapshot) => {
+          const leave = leaveSnapshot.val() as LeaveModel;
+          leaves.push({ ...leave, key: leaveSnapshot.key });
+        });
+        subscriber.next(leaves);
+      });
+    });
+  }
+
   getAllLeaves(status: string) {
     return new Observable<LeaveModel[]>((observer: Observer<LeaveModel[]>) => {
       const db = getDatabase();

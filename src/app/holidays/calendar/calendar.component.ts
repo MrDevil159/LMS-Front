@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { Event } from 'src/app/shared/model/Event.model';
 import { LeaveModel } from 'src/app/shared/model/LeaveRequest.model';
 import { AdminService } from 'src/app/shared/services/admin.service';
@@ -17,58 +17,46 @@ export class CalendarComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
   constructor(private el: ElementRef, private adminService: AdminService, private router: Router, private route:ActivatedRoute, private leaveService:LeavesService) {
   }
- 
+  check!:string;
   holidays: Event[] = [];
   getValueHoliday!:Subscription;
   ngOnInit() {
-    this.subscription = this.leaveService.getAllLeaves('CONFIRMED').subscribe(
-      {
-        next: (data) => {
-          this.leaves = data;
-          const uniqueHolidays = new Set<Event>(); // Create a Set to store unique Event objects
-  
-          this.leaves.forEach((leave) => {
-            const eventsForLeave = this.convertLeaveToEvent(leave);
-            eventsForLeave.forEach((event) => {
-              uniqueHolidays.add(event); // Add each Event object to the Set
-            });
+    const uniqueHolidays = new Set<Event>(); 
+    this.subscription = this.leaveService.getAllLeavesNew('CONFIRMED').pipe(
+      switchMap((data) => {
+        this.leaves = data;  
+        this.leaves.forEach((leave) => {
+          const eventsForLeave = this.convertLeaveToEvent(leave);
+          eventsForLeave.forEach((event) => {
+            uniqueHolidays.add(event); 
           });
+        });
   
-          this.holidays = Array.from(uniqueHolidays); // Convert the Set back to an array
-  
-          this.getValueHoliday = this.adminService.getAllHoliday().subscribe(
-            {
-              next: (datainner) => {
-                datainner.forEach((event) => {
-                  uniqueHolidays.add(event); // Add each Event object from datainner to the Set
-                });
-                this.holidays = Array.from(uniqueHolidays); // Convert the Set back to an array
-                console.log(this.holidays);
-
-              },
-              error: (err) => console.log(err),
-              complete: () => console.log('holiday complete')
-            }
-          );
-        },
-        error: (err) => {
-          console.log('Failed Loading Leaves', err);
-        },
-        complete: () => {
-          console.log('Completed Loading Leaves Subscription');
-        }
-      }
-    );
-  
+        this.holidays = Array.from(uniqueHolidays); 
+        this.updateDisplayedHolidays();
+        this.generateCalendar();
+        return this.adminService.getAllHoliday();
+      })
+    ).subscribe({
+      next: (datainner) => {
+        datainner.forEach((event) => {
+          uniqueHolidays.add(event); 
+        });
+        this.holidays = Array.from(uniqueHolidays); 
+        console.log(this.holidays);
+      },
+      error: (err) => console.log(err),
+      complete: () => console.log('holiday complete')
+    });
     this.updateDisplayedHolidays();
     this.generateCalendar();
+
   }
   
   
 
 
   ngOnDestroy(): void {
-    this.getValueHoliday.unsubscribe();
     this.subscription.unsubscribe();
   }
 
@@ -113,7 +101,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   groupByTypeOfHoliday(day: number): { [key: string]: Event } {
     const events = this.eventsForDay(day); // Convert day to string when calling eventsForDay
     const groupedEvents: { [key: string]: Event } = {};
-  
+   
     events.forEach((event) => {
       const key = event.typeOfHoliday;
       if (!groupedEvents[key]) {
