@@ -123,6 +123,7 @@ export class AdminService {
           typeOfHoliday: (item as Event).typeOfHoliday,
         }));
         subscriber.next(transformedData);
+        subscriber.complete();
       });
     });
   }

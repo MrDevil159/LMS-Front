@@ -150,7 +150,7 @@ export class LeavesService {
       equalTo(status)
     );
     return new Observable<LeaveModel[]>((subscriber) => {
-      const unsubscribe = onValue(leavesQuery, (snapshot) => {
+      onValue(leavesQuery, (snapshot) => {
         const data = snapshot.val();
         const leaves: LeaveModel[] = [];
         snapshot.forEach((leaveSnapshot) => {
@@ -158,6 +158,7 @@ export class LeavesService {
           leaves.push({ ...leave, key: leaveSnapshot.key });
         });
         subscriber.next(leaves);
+        subscriber.complete();
       });
     });
   }

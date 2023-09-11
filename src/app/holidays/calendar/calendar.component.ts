@@ -4,7 +4,9 @@ import { Subscription, switchMap } from 'rxjs';
 import { Event } from 'src/app/shared/model/Event.model';
 import { LeaveModel } from 'src/app/shared/model/LeaveRequest.model';
 import { AdminService } from 'src/app/shared/services/admin.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { LeavesService } from 'src/app/shared/services/leaves.service';
+import { format, parse } from 'date-fns';
 
 
 @Component({
@@ -15,7 +17,7 @@ import { LeavesService } from 'src/app/shared/services/leaves.service';
 export class CalendarComponent implements OnInit, OnDestroy {
   leaves:LeaveModel[] = [];
   subscription!: Subscription;
-  constructor(private el: ElementRef, private adminService: AdminService, private router: Router, private route:ActivatedRoute, private leaveService:LeavesService) {
+  constructor(private el: ElementRef, private adminService: AdminService, private router: Router, private route:ActivatedRoute, private leaveService:LeavesService, private authService:AuthService) {
   }
   check!:string;
   holidays: Event[] = [];
@@ -53,7 +55,25 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   }
   
+  convertLeaveToEvent(leave: LeaveModel): Event[] {
+    const events: Event[] = [];
+    const startDate = parse(leave.startDate, 'yyyy-MM-dd', new Date());
+    const endDate = parse(leave.endDate, 'yyyy-MM-dd', new Date());
   
+    if (leave.email) {
+      while (startDate <= endDate) {
+        const event: Event = {
+          name: leave.email,
+          date: format(startDate, 'yyyy-M-d'),
+          typeOfHoliday: leave.typeOfLeave,
+        };
+        events.push(event);
+        startDate.setDate(startDate.getDate() + 1);
+      }
+    }
+    return events;
+  }
+
 
 
   ngOnDestroy(): void {
@@ -169,40 +189,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
       this.holidays = this.holidays.filter(holiday => holiday.name !== event.name);
       this.adminService.deleteHolidayEvent(event);
     }
-  }
-
-
-
-
-    // Define a function to convert LeaveModel to Event
-  convertLeaveToEvent(leave: LeaveModel): Event[] {
-    const events: Event[] = [];
-    const startDate = new Date(leave.startDate);
-    const endDate = new Date(leave.endDate);
-  
-    if (leave.email) {
-      while (startDate <= endDate) {
-        const event: Event = {
-          name: leave.email,
-          date: this.formatDateToYYYYMD(startDate), // Format date as yyyy-mm-dd
-          typeOfHoliday: leave.typeOfLeave,
-        };
-        events.push(event);
-  
-        startDate.setDate(startDate.getDate() + 1);
-      }
-    }
-    
-    return events;
-  }
-  
-  formatDateToYYYYMD(date: Date): string {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1; // Adding 1 because getMonth() returns 0-based month (0 = January)
-    const day = date.getDate();
-  
-    // Use template literals to format the date
-    return `${year}-${month}-${day}`;
   }
 
 
