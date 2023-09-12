@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
@@ -19,6 +19,12 @@ export class LoginComponent {
       const userDataPromise = this.authService.fetchUserDataByEmail(email);
       userDataPromise.then((data: any) => {
         console.log('Fetching Auth Data...');
+        if(data.role==="ADMIN") {
+          this.router.navigate(['/leaves/requests']);
+        } else if(data.role==="USER") {
+          this.router.navigate(['/leaves']);
+
+        }
       });
     }).catch((error: any) => {
       console.log(error);

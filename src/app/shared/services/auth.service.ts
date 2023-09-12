@@ -64,7 +64,6 @@ export class AuthService {
             console.log('email sent');
           });
         }
-        this.router.navigate(['/leaves']);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -213,6 +212,7 @@ export class AuthService {
       const queryRef = ref(db, 'users/');
       onValue(queryRef, (snapshot) => {
         const data = snapshot.toJSON();
+
         const filteredObject = Object.values(data!).find(item => item.email === email);
         if (filteredObject) {
           this.userDataSubject.next(filteredObject);
