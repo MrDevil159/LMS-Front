@@ -4,11 +4,11 @@
       <div class="d-flex justify-content-between mt-5 me-5 ms-5">
         <div class="display-6">Users List</div>
         <div class="buttongroup d-flex">
-          <a routerLink="add" class="me-2 d-none d-md-flex"><button mat-raised-button color="primary"><mat-icon>add</mat-icon> Add User</button></a>
+          <button routerLink="add" class="me-2 d-none d-md-flex text-decoration-none" mat-raised-button color="primary"><mat-icon>add</mat-icon> Add User</button>
 
           <button  class="d-none d-md-flex" (click)="onGetUserData()" mat-raised-button color="primary"><mat-icon>sync</mat-icon> Load User</button>
 
-          <a routerLink="add" class="me-2 d-flex d-md-none"><button mat-fab color="primary"><mat-icon>add</mat-icon></button></a>
+          <button routerLink="add" class="me-2 d-flex d-md-none text-decoration-none" mat-fab color="primary"><mat-icon>add</mat-icon></button>
 
           <button  class="d-flex d-md-none" (click)="onGetUserData()" mat-fab color="primary"><mat-icon>sync</mat-icon></button>
         </div>
@@ -22,8 +22,19 @@
           </mat-form-field>
     
           <div class="mat-elevation-z8">
-            <mat-table [dataSource]="dataSource" matSort>
-          
+            <ng-container>
+              <div [ngClass]="{ 'loading-cell': load }">
+                <div *ngIf="load" class="loading-spinner">
+                  <mat-spinner diameter="100"></mat-spinner>
+                </div>
+              </div>
+            </ng-container>
+
+
+            <mat-table [dataSource]="dataSource" *ngIf="!load" matSort>
+        
+
+
               <ng-container matColumnDef="name">
                 <mat-header-cell mat-sort-header *matHeaderCellDef> Name. </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
@@ -69,7 +80,7 @@
               </mat-row>
             </mat-table>
             
-            <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+            <mat-paginator *ngIf="!load" [pageSizeOptions]="[5, 10, 20]"
             showFirstLastButtons
             aria-label="Select page">
 </mat-paginator>

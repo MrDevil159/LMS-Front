@@ -7,11 +7,13 @@ import { isAuthenticatedGuard } from './shared/guards/is-authenticated.guard';
 const routes: Routes = [
   {
     path: '',
-    component: LandingComponent
+    redirectTo: 'auth',
+    pathMatch: 'full'
   },
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+
   },
   {
     path: 'leaves',
@@ -22,11 +24,12 @@ const routes: Routes = [
   {
     path: 'users',
     loadChildren: () => import('./user/user.module').then(m => m.UserModule),
+    canActivate: [isAuthenticatedGuard,isAdminGuard]
   },
   {
     path: 'holidays',
     loadChildren: () => import('./holidays/holidays.module').then(m => m.HolidaysModule),
-    canActivate: [isAdminGuard]
+    canActivate: [isAuthenticatedGuard,isAdminGuard]
   }, 
   {
     path: '**',

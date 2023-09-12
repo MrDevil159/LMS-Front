@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, Observer, firstValueFrom, from, throwError, of } from 'rxjs';
+import { BehaviorSubject, Observable, Observer, firstValueFrom, from, throwError, of, Subscription } from 'rxjs';
 import { catchError, first, tap } from 'rxjs/operators';
 import {
   Auth,
@@ -64,14 +64,16 @@ export class AuthService {
             console.log('email sent');
           });
         }
+        this.router.navigate(['/leaves']);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode);
         console.log(errorMessage);
-      });
+        this.showErrorSnackbar(this.getErrorMessageFromCode(errorCode), 5000);
 
+      });
     const body = {
       email,
       password,
@@ -80,6 +82,126 @@ export class AuthService {
     return this.http.post(this.firebaseApiUrl, body).toPromise();
   }
 
+  getErrorMessageFromCode(errorCode: string): string {
+    switch (errorCode) {
+      case 'auth/claims-too-large':
+        return 'Claims payload too large.';
+      case 'auth/email-already-exists':
+        return 'Email is already in use.';
+      case 'auth/id-token-expired':
+        return 'ID token expired.';
+      case 'auth/id-token-revoked':
+        return 'ID token revoked.';
+      case 'auth/insufficient-permission':
+        return 'Insufficient permission.';
+      case 'auth/internal-error':
+        return 'Internal server error.';
+      case 'auth/invalid-argument':
+        return 'Invalid argument.';
+      case 'auth/invalid-claims':
+        return 'Invalid custom claims.';
+      case 'auth/invalid-continue-uri':
+        return 'Invalid continue URL.';
+      case 'auth/invalid-creation-time':
+        return 'Invalid creation time.';
+      case 'auth/invalid-credential':
+        return 'Invalid credential.';
+      case 'auth/invalid-disabled-field':
+        return 'Invalid disabled property.';
+      case 'auth/invalid-display-name':
+        return 'Invalid display name.';
+      case 'auth/invalid-dynamic-link-domain':
+        return 'Invalid dynamic link domain.';
+      case 'auth/invalid-email':
+        return 'Invalid email address.';
+      case 'auth/invalid-email-verified':
+        return 'Invalid email verified property.';
+      case 'auth/invalid-hash-algorithm':
+        return 'Invalid hash algorithm.';
+      case 'auth/invalid-hash-block-size':
+        return 'Invalid hash block size.';
+      case 'auth/invalid-hash-derived-key-length':
+        return 'Invalid hash key length.';
+      case 'auth/invalid-hash-key':
+        return 'Invalid hash key.';
+      case 'auth/invalid-hash-memory-cost':
+        return 'Invalid hash memory cost.';
+      case 'auth/invalid-hash-parallelization':
+        return 'Invalid hash parallelization.';
+      case 'auth/invalid-hash-rounds':
+        return 'Invalid hash rounds.';
+      case 'auth/invalid-hash-salt-separator':
+        return 'Invalid hash salt separator.';
+      case 'auth/invalid-id-token':
+        return 'Invalid ID token.';
+      case 'auth/invalid-last-sign-in-time':
+        return 'Invalid last sign-in time.';
+      case 'auth/invalid-page-token':
+        return 'Invalid page token.';
+      case 'auth/invalid-password':
+        return 'Invalid password.';
+      case 'auth/invalid-password-hash':
+        return 'Invalid password hash.';
+      case 'auth/invalid-password-salt':
+        return 'Invalid password salt.';
+      case 'auth/invalid-phone-number':
+        return 'Invalid phone number.';
+      case 'auth/invalid-photo-url':
+        return 'Invalid photo URL.';
+      case 'auth/invalid-provider-data':
+        return 'Invalid provider data.';
+      case 'auth/invalid-provider-id':
+        return 'Invalid provider ID.';
+      case 'auth/invalid-oauth-responsetype':
+        return 'Invalid OAuth responseType.';
+      case 'auth/invalid-session-cookie-duration':
+        return 'Invalid session cookie duration.';
+      case 'auth/invalid-uid':
+        return 'Invalid user ID.';
+      case 'auth/invalid-user-import':
+        return 'Invalid user record import.';
+      case 'auth/maximum-user-count-exceeded':
+        return 'Maximum user count exceeded.';
+      case 'auth/missing-android-pkg-name':
+        return 'Missing Android Package Name.';
+      case 'auth/missing-continue-uri':
+        return 'Missing continue URL.';
+      case 'auth/missing-hash-algorithm':
+        return 'Missing hash algorithm.';
+      case 'auth/missing-ios-bundle-id':
+        return 'Missing iOS Bundle ID.';
+      case 'auth/missing-uid':
+        return 'Missing user ID.';
+      case 'auth/missing-oauth-client-secret':
+        return 'Missing OAuth client secret.';
+      case 'auth/operation-not-allowed':
+        return 'Operation not allowed.';
+      case 'auth/phone-number-already-exists':
+        return 'Phone number already in use.';
+      case 'auth/project-not-found':
+        return 'Project not found.';
+      case 'auth/reserved-claims':
+        return 'Reserved custom claims.';
+      case 'auth/session-cookie-expired':
+        return 'Session cookie expired.';
+      case 'auth/session-cookie-revoked':
+        return 'Session cookie revoked.';
+      case 'auth/too-many-requests':
+        return 'Too many requests.';
+      case 'auth/uid-already-exists':
+        return 'User ID already in use.';
+      case 'auth/unauthorized-continue-uri':
+        return 'Unauthorized continue URL.';
+      case 'auth/user-not-found':
+        return 'User not found.';
+      case 'auth/missing-password':
+        return 'Password field is missing.';
+      case 'auth/wrong-password':
+        return 'Invalid Credentials.';
+      default:
+        return 'An error occurred. Please try again later.';
+    }
+  }
 
   fetchUserDataByEmail(email: string | null): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -91,9 +213,7 @@ export class AuthService {
       const queryRef = ref(db, 'users/');
       onValue(queryRef, (snapshot) => {
         const data = snapshot.toJSON();
-
         const filteredObject = Object.values(data!).find(item => item.email === email);
-
         if (filteredObject) {
           this.userDataSubject.next(filteredObject);
           resolve(filteredObject);
@@ -141,39 +261,69 @@ export class AuthService {
       }
     });
   }
+
   isAuthenticated(): boolean {
     const auth = getAuth();
-
     const userToken = this.authfb.currentUser;
     return !!userToken;
   }
-
+  async IsLoggedInGuard(): Promise<boolean> {
+    try {
+      return await new Promise((resolve, reject) =>
+        this.authfb.onAuthStateChanged(
+          user => {
+            if (user) {
+              resolve(true); 
+            } else {
+              resolve(false); 
+            }
+          },
+          error => reject(error)
+        )
+      );
+    } catch (error) {
+      return false; 
+    }
+  }
+  
   isAdminGuardCheck(): Promise<boolean> {
     return new Promise(async (resolve) => {
+      let userDataSubscription: Subscription | null = null; // Initialize to null
+      
       try {
-        // Wait for the userDataSubject to emit a value
-        const userData = await firstValueFrom(this.userDataSubject);
-        
-        // Check the user role and resolve the promise accordingly
-        if (userData?.role === 'ADMIN') {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
+        userDataSubscription = this.userDataSubject.subscribe(async (userData) => {
+          try {
+            // Check the user role and resolve the promise accordingly
+            console.log(userData);
+            
+            if (userData?.role === 'ADMIN') {
+              console.log('is Admin');
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          } catch (error) {
+            // Handle any errors here
+            console.error('Error checking admin status:', error);
+            resolve(false); // You can handle this case as needed
+          }
+        });
       } catch (error) {
         // Handle any errors here
-        console.error('Error checking admin status:', error);
+        console.error('Error subscribing to userDataSubject:', error);
         resolve(false); // You can handle this case as needed
+      } finally {
+        // Check if userDataSubscription is not null before attempting to unsubscribe
+        if (userDataSubscription) {
+          userDataSubscription.unsubscribe();
+        }
       }
     });
   }
   
-  
   isAdmin():Boolean {
     console.log();
-    
     const userRole = this.userDataSubject.value?.role; 
-   
     return userRole === 'ADMIN';
   }
 
@@ -192,6 +342,7 @@ export class AuthService {
       });
   }
   router = inject(Router);
+
   isLoggedIn() {
     console.log('checking');
     this.authfb.onAuthStateChanged((res) => {
@@ -203,15 +354,9 @@ export class AuthService {
           this.userAuthSubject.next(this.authfb.currentUser);
           console.log(this.userAuthSubject.value);
           console.log(data);
-          if(data.role === 'USER') {
-            this.router.navigate(['/leaves']);
-          } else if(data.role === 'ADMIN') {
-            this.router.navigate(['leaves', 'requests']);
-          }
         });
       }
     });
-    // return !!user;
   }
 
 

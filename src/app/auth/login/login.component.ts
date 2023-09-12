@@ -19,19 +19,12 @@ export class LoginComponent {
       const userDataPromise = this.authService.fetchUserDataByEmail(email);
       userDataPromise.then((data: any) => {
         console.log('Fetching Auth Data...');
-        if (this.authService.isAdmin()) {
-          this.router.navigate(['/leaves']);
-        } else {
-          this.router.navigate(['/leaves']);
-        }
       });
     }).catch((error: any) => {
       console.log(error);
-      this.error = error;
-      this.authService.showErrorSnackbar(error, 5000);
-
     });
   }
+
   onForgotPassword(email:string) {
     console.log(email.trim().length);
     

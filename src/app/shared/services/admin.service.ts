@@ -13,12 +13,16 @@ import {
   update,
   onValue,
   remove,
+  query,
+  orderByChild,
 } from '@angular/fire/database';
 import { Event } from 'src/app/shared/model/Event.model';
+import { EventWithDate } from '../model/EventWithDate.model';
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class AdminService {
   constructor(
     private http: HttpClient,
@@ -108,7 +112,6 @@ export class AdminService {
     });
   }
   
-  
 
   getAllHoliday(): Observable<Event[]> {
     const db = getDatabase();
@@ -122,6 +125,25 @@ export class AdminService {
           date: (item as Event).date,
           typeOfHoliday: (item as Event).typeOfHoliday,
         }));
+        subscriber.next(transformedData);
+        subscriber.complete();
+      });
+    });
+  }
+
+  getAllHolidayList(): Observable<EventWithDate[]> {
+    const db = getDatabase();
+    const starCountRef = query(ref(db, 'holidays'),orderByChild('date'));
+
+    return new Observable<EventWithDate[]>((subscriber) => {
+      const unsubscribe = onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        const transformedData = Object.values(data).map((item) => ({
+          name: (item as EventWithDate).name,
+          date: new Date((item as EventWithDate).date),
+          typeOfHoliday: (item as EventWithDate).typeOfHoliday,
+        }));
+        transformedData.sort((a, b) => a.date.getTime() - b.date.getTime());
         subscriber.next(transformedData);
         subscriber.complete();
       });

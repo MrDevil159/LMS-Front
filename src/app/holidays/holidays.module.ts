@@ -18,6 +18,8 @@ import { TableViewComponent } from './table-view/table-view.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 
+import { MatSortModule } from '@angular/material/sort';
+
 @NgModule({
   declarations: [
     HolidayFormComponent,
@@ -40,6 +42,7 @@ MatDatepickerModule,
 MatNativeDateModule,
 MatTableModule,
 MatPaginatorModule,    
+MatSortModule
   ]
 })
 export class HolidaysModule { }

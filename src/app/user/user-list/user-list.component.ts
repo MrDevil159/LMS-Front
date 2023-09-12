@@ -20,6 +20,7 @@ import { AuthService } from 'src/app/shared/services/auth.service';
   styleUrls: ['./user-list.component.css'],
 })
 export class UserListComponent implements AfterViewInit, OnInit {
+
   displayedColumns: string[] = [
     'name',
     'email',
@@ -27,7 +28,7 @@ export class UserListComponent implements AfterViewInit, OnInit {
     'role',
     'actions',
   ];
-  load = true;
+  load = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>(); // Initialize here
@@ -42,7 +43,6 @@ export class UserListComponent implements AfterViewInit, OnInit {
     private dialog: MatDialog
   ) {
     this.onGetUserData();
-    this.load = true;
     this.refresh = this.router.getCurrentNavigation()!.extras.state;
     console.log(this.refresh);
   }
@@ -61,6 +61,7 @@ export class UserListComponent implements AfterViewInit, OnInit {
   }
 
   onGetUserData() {
+    this.load = true;
     this.adminService.getAllUserData().subscribe({
       next: (res) => {
         const flattenedData = Object.values(res).map((user) => {
@@ -79,11 +80,12 @@ export class UserListComponent implements AfterViewInit, OnInit {
         });
 
         this.dataSource.data = flattenedData;
-
+        this.load = false; 
         this.dataSource.paginator = this.paginator;
       },
       error: (err) => {
         console.log(err);
+        this.load = false;
         this.authService.showErrorSnackbar('Try Pressing Load User.', 5000);
       },
     });
