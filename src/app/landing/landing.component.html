@@ -1,18 +1,18 @@
-<div class="container">
+<div class="container pt-3">
     <div class="row mt-5">
         <div class="col">
             <div class="display-1">
-                Leave Management System
+                <span class="text-danger">404</span> Not Found
             </div>  
 
             <div class="row mt-3">
                 <div class="col-md-8">
-                    Streamline Leave Management with Ease<br>
-                Welcome to our Leave Management System – the ultimate solution for effortless leave management. Say goodbye to paperwork and scheduling headaches. Our user-friendly platform empowers your team to submit, track, and approve leave requests seamlessly. Stay informed in real-time, optimize resource planning, and enjoy a hassle-free way to manage time off. Experience efficient leave management today.
+                    <p class="lead">The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
                 </div>
             </div>
-                
-             <a routerLink="/auth"><button class="btn btn-primary btn-sm mt-3">Login</button></a>
+            <button routerLink="/leaves" *ngIf="authService.isAuthenticated()" class="btn btn-primary btn-sm mt-3" >Go Back</button>
+
+             <button (click)="navigationService.goBack()" *ngIf="!authService.isAuthenticated()" class="btn btn-primary btn-sm mt-3" >Go Back</button>
         </div>
     </div>
 </div>

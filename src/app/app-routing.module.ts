@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LandingComponent } from './landing/landing.component';
 import { isAdminGuard } from './shared/guards/is-admin.guard';
 import { isAuthenticatedGuard } from './shared/guards/is-authenticated.guard';
+import { LandingComponent } from './landing/landing.component';
 
 const routes: Routes = [
   {
@@ -13,7 +13,6 @@ const routes: Routes = [
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
-
   },
   {
     path: 'leaves',
