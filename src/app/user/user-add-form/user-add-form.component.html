@@ -1,7 +1,7 @@
 <div class="row" style="--bs-gutter-x: 0;">
   <div class="col-md-10 m-auto">
     <div class="container mt-5">
-      <div class="display-6 mt-2">Add User</div>
+      <div class="display-6 mt-2">{{ editMode? 'Edit User' : 'Add User' }}</div>
     
       <form [formGroup]="newUser" (ngSubmit)="editMode? onEditUser() : onAddUser()">
         <mat-form-field class="w-100" appearance="outline">
